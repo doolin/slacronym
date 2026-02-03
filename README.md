@@ -46,7 +46,7 @@ yarn deploy
 ./deploy.sh
 ```
 
-Uses `AWS_PROFILE=terraformer` and `AWS_REGION=us-west-1` by default. The script packages `index.mjs` (as `index.js`) and `package.json`, uploads the zip, and optionally updates the function config to Node.js 20 and `index.handler` (if Terraform allows).
+Uses `AWS_PROFILE=terraformer` and `AWS_REGION=us-west-1` by default. The script packages only production artifacts: `index.mjs` (as `index.js`) and `package.prod.json` (as `package.json`). **Development tooling is not deployed** — no devDependencies, no lint/format/audit scripts. Keep `package.prod.json` in sync with `package.json` for `name`/`version` if you change them. The script optionally updates the function config to Node.js 20 and `index.handler` (if Terraform allows).
 
 ## Scripts
 

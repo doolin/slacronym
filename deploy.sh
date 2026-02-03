@@ -17,10 +17,10 @@ echo "📦 Creating deployment package..."
 TEMP_DIR=$(mktemp -d)
 trap "rm -rf $TEMP_DIR" EXIT
 
-# Copy necessary files
+# Copy production files only (no devDependencies, no dev scripts)
 # Lambda expects index.js (not index.mjs) for ES modules
 cp index.mjs "$TEMP_DIR/index.js"
-cp package.json "$TEMP_DIR/"
+cp package.prod.json "$TEMP_DIR/package.json"
 
 # Create zip file
 ZIP_FILE="deploy.zip"
