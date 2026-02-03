@@ -58,6 +58,20 @@ Uses `AWS_PROFILE=terraformer` and `AWS_REGION=us-west-1` by default. The script
 | `yarn lint:fix`| ESLint with auto-fix       |
 | `yarn format`  | Format with Prettier       |
 | `yarn format:check` | Check formatting only |
+| `yarn audit`   | Run dependency vulnerability audit (exit non-zero if vulns found); use in CI |
+
+## CI/CD
+
+Run before deploy or on every PR:
+
+```bash
+yarn install --immutable   # or your install step
+yarn audit                 # exit non-zero if any vulnerabilities
+yarn lint
+yarn format:check
+```
+
+`yarn audit` runs Yarn’s built-in audit (same data as npm audit). The pipeline fails when the audit reports vulnerabilities.
 
 ## Adding acronyms
 
