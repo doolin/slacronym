@@ -1,0 +1,35 @@
+# Node / general OS
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+*.tmp
+*.swp
+*.swo
+.DS_Store
+
+# Environment / secrets
+.env
+.env.*.local
+
+# Coverage / test output
+coverage/
+.nyc_output/
+
+# Build artifacts
+dist/
+build/
+.cache/
+
+# Yarn Berry (Modern Yarn)
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.data.json
+
+# Volta (managed globally; nothing project-local by default)
+# (kept for clarity; no patterns needed here currently)
+
