@@ -2,38 +2,14 @@
 
 set -euo pipefail
 
-# Configuration
-FUNCTION_NAME="${LAMBDA_FUNCTION_NAME:-}"
+# Configuration (hard-coded function name)
+FUNCTION_NAME="slacronym"
 REGION="${AWS_REGION:-us-west-1}"
 AWS_PROFILE="${AWS_PROFILE:-terraformer}"
 
 # Build AWS CLI args
 AWS_CLI_ARGS=("--region" "$REGION")
 [ -n "$AWS_PROFILE" ] && AWS_CLI_ARGS+=("--profile" "$AWS_PROFILE")
-
-# If function name not provided, try to find it
-if [ -z "$FUNCTION_NAME" ]; then
-  echo "⚠️  LAMBDA_FUNCTION_NAME not set. Attempting to find function..."
-  # Try to get function from Function URL
-  FUNCTION_ARN=$(aws lambda list-function-url-configs "${AWS_CLI_ARGS[@]}" \
-    --query 'FunctionUrlConfigs[?contains(FunctionUrl, `hcldim6vnn7xswxjnt66ucwy5e0cqeps`)].FunctionArn' \
-    --output text 2>/dev/null | head -1)
-  
-  if [ -n "$FUNCTION_ARN" ]; then
-    FUNCTION_NAME=$(echo "$FUNCTION_ARN" | awk -F: '{print $NF}')
-    echo "✅ Found function: $FUNCTION_NAME"
-  else
-    echo "❌ Could not determine function name."
-    echo ""
-    echo "Please set LAMBDA_FUNCTION_NAME environment variable:"
-    echo "  export LAMBDA_FUNCTION_NAME=your-function-name"
-    echo "  ./deploy.sh"
-    echo ""
-    echo "Or pass it directly:"
-    echo "  LAMBDA_FUNCTION_NAME=your-function-name ./deploy.sh"
-    exit 1
-  fi
-fi
 
 echo "📦 Creating deployment package..."
 
