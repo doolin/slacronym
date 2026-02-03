@@ -31,26 +31,17 @@ cd "$OLDPWD"
 echo "✅ Package created: $ZIP_FILE"
 echo "📤 Deploying to Lambda function: $FUNCTION_NAME (region: $REGION)..."
 
-# Update Lambda function code
+# Update Lambda function code (runtime/handler are managed by Terraform)
 aws lambda update-function-code \
   "${AWS_CLI_ARGS[@]}" \
   --function-name "$FUNCTION_NAME" \
   --zip-file "fileb://$ZIP_FILE" \
   --output json > /dev/null
 
-# Update runtime and handler to Node.js (Terraform will need to be updated to match)
-echo "🔧 Updating runtime to nodejs20.x and handler to index.handler..."
-aws lambda update-function-configuration \
-  "${AWS_CLI_ARGS[@]}" \
-  --function-name "$FUNCTION_NAME" \
-  --runtime "nodejs20.x" \
-  --handler "index.handler" \
-  --output json > /dev/null 2>&1 && echo "✅ Runtime and handler updated" || echo "⚠️  Could not update runtime/handler (may need Terraform update)"
-
 echo ""
-echo "✅ Deployment complete!"
+echo "✅ Code deployed to $FUNCTION_NAME."
 echo ""
-echo "🧪 Test your deployment:"
+echo "🧪 Test:"
 echo "  curl 'https://hcldim6vnn7xswxjnt66ucwy5e0cqeps.lambda-url.us-west-1.on.aws/slacronym?text=MAAG'"
 echo ""
-echo "📝 Note: It may take a few seconds for the new code to be active."
+echo "📝 Runtime and handler are managed by Terraform. Allow a few seconds for the new code to be active."

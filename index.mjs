@@ -17,7 +17,7 @@ const ACRONYMS = {
   "R&R": "R&R — Rest and Recuperation (leave period for military personnel).",
   FOB: "FOB — Forward Operating Base (tactical military base).",
   LZ: "LZ — Landing Zone (helicopter landing area).",
-  FSG: "FSB - Fire Support Base (tactical military base).",
+  FSB: "FSB - Fire Support Base (tactical military base).",
 };
 
 const SUPPORTED_PATHS = ["/", "/slacronym"];
