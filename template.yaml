@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: slacronym - Slack-style acronym lookup Lambda function
+
+Globals:
+  Function:
+    Timeout: 10
+    MemorySize: 128
+    Runtime: nodejs20.x
+    Architectures:
+      - arm64
+
+Resources:
+  SlacronymFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      CodeUri: .
+      Environment:
+        Variables: {}
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowMethods:
+            - GET
+            - POST
+          AllowOrigins:
+            - '*'
+          AllowHeaders:
+            - '*'
+
+Outputs:
+  SlacronymFunctionUrl:
+    Description: "Function URL for slacronym"
+    Value: !GetAtt SlacronymFunction.FunctionUrl
+  SlacronymFunctionArn:
+    Description: "Function ARN"
+    Value: !GetAtt SlacronymFunction.Arn

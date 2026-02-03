@@ -1,16 +1,22 @@
-import { readFileSync } from "node:fs";
+import { createServer } from "node:http";
 
-const ACRONYMS = JSON.parse(
-  readFileSync(new URL("./acronyms.json", import.meta.url), "utf8")
-);
+// Inline acronym definitions to avoid reading a separate JSON file
+const ACRONYMS = {
+  MAAG: "MAAG — Military Assistance Advisory Group (U.S. advisory mission; Vietnam context).",
+  MACV: "MACV — Military Assistance Command, Vietnam (U.S. command in Vietnam; Vietnam War context)."
+};
 
-function lookup(term) {
+const SUPPORTED_PATHS = ["/", "/slacronym"];
+const SUGGESTION_TEXT = "Try: MAAG or MACV";
+
+function lookupAcronym(term) {
   if (!term) return null;
+
   const key = term.trim().toUpperCase();
   return ACRONYMS[key] ?? null;
 }
 
-function slackishResponse(text) {
+function slackEphemeral(text) {
   return {
     statusCode: 200,
     headers: { "content-type": "application/json; charset=utf-8" },
@@ -21,53 +27,184 @@ function slackishResponse(text) {
   };
 }
 
+function notFound() {
+  return {
+    statusCode: 404,
+    headers: { "content-type": "text/plain" },
+    body: "not found"
+  };
+}
+
+function extractMethod(event = {}) {
+  const method =
+    event.requestContext?.http?.method ||
+    event.httpMethod ||
+    "GET";
+
+  return method.toUpperCase();
+}
+
+function extractPath(event = {}) {
+  return event.rawPath || event.path || "/";
+}
+
+function extractQuery(event = {}) {
+  return event.queryStringParameters || {};
+}
+
+function isKnownPath(path) {
+  return SUPPORTED_PATHS.includes(path);
+}
+
+function extractTextFromQuery(qs) {
+  return qs.text || qs.term || "";
+}
+
+function parseBody(event) {
+  const body = event.body || "";
+  const isBase64 = event.isBase64Encoded === true;
+
+  if (!body) return "";
+  
+  try {
+    return isBase64 ? Buffer.from(body, "base64").toString("utf8") : body;
+  } catch (error) {
+    console.error("Error parsing body:", error);
+    return "";
+  }
+}
+
+function normalizeHeaderName(name) {
+  return name?.toLowerCase() || "";
+}
+
+function extractContentType(headers = {}) {
+  if (!headers || typeof headers !== "object") return "";
+  
+  const raw =
+    headers["content-type"] ||
+    headers["Content-Type"] ||
+    "";
+
+  return normalizeHeaderName(raw);
+}
+
+function textFromFormUrlencoded(encodedBody) {
+  const params = new URLSearchParams(encodedBody);
+  return params.get("text") || params.get("term") || "";
+}
+
+function textFromJson(body) {
+  if (!body || typeof body !== "string") return "";
+  try {
+    const obj = JSON.parse(body);
+    return obj.text || obj.term || "";
+  } catch (error) {
+    // Not valid JSON, return empty string
+    return "";
+  }
+}
+
+function extractTextFromEvent(event = {}) {
+  const method = extractMethod(event);
+  const qs = extractQuery(event);
+
+  if (method !== "POST") return extractTextFromQuery(qs);
+
+  const decodedBody = parseBody(event);
+  if (!decodedBody) return extractTextFromQuery(qs);
+  
+  const headers = event.headers || {};
+  const contentType = extractContentType(headers);
+
+  if (contentType.includes("application/x-www-form-urlencoded")) {
+    const fromBody = textFromFormUrlencoded(decodedBody);
+    if (fromBody) return fromBody;
+  }
+
+  if (contentType.includes("application/json")) {
+    const fromBody = textFromJson(decodedBody);
+    if (fromBody) return fromBody;
+  }
+
+  return extractTextFromQuery(qs);
+}
+
 // Works for:
 // - Lambda Function URL / API Gateway (exports.handler)
 // - Local node server (node index.mjs)
 export async function handler(event = {}) {
-  const method = (event.requestContext?.http?.method || event.httpMethod || "GET").toUpperCase();
-  const rawPath = event.rawPath || event.path || "/";
-  const qs = event.queryStringParameters || {};
+  try {
+    console.log("Handler invoked, event keys:", Object.keys(event));
+    const path = extractPath(event);
+    console.log("Path:", path);
 
-  if (rawPath !== "/" && rawPath !== "/slacronym") {
-    return { statusCode: 404, headers: { "content-type": "text/plain" }, body: "not found" };
-  }
-
-  // Accept:
-  // - GET /slacronym?text=MAAG
-  // - POST x-www-form-urlencoded with "text=MAAG" (Slack-like)
-  let text = qs.text || qs.term || "";
-
-  if (method === "POST") {
-    const body = event.body || "";
-    const isB64 = event.isBase64Encoded === true;
-    const decoded = isB64 ? Buffer.from(body, "base64").toString("utf8") : body;
-
-    const contentType =
-      (event.headers?.["content-type"] || event.headers?.["Content-Type"] || "").toLowerCase();
-
-    if (contentType.includes("application/x-www-form-urlencoded")) {
-      const params = new URLSearchParams(decoded);
-      text = params.get("text") || params.get("term") || "";
-    } else if (contentType.includes("application/json")) {
-      try {
-        const obj = JSON.parse(decoded);
-        text = obj.text || obj.term || "";
-      } catch {
-        // ignore
-      }
+    if (!isKnownPath(path)) {
+      return notFound();
     }
+
+    const rawText = extractTextFromEvent(event);
+    const normalized = rawText.trim();
+    console.log("Normalized text:", normalized);
+
+    const found = lookupAcronym(normalized);
+    if (found) return slackEphemeral(found);
+
+    if (!normalized) {
+      return slackEphemeral(SUGGESTION_TEXT);
+    }
+
+    const message = `Unknown acronym: ${normalized.toUpperCase()}`;
+    return slackEphemeral(message);
+  } catch (error) {
+    console.error("Handler error:", error);
+    console.error("Error stack:", error.stack);
+    return {
+      statusCode: 500,
+      headers: { "content-type": "application/json; charset=utf-8" },
+      body: JSON.stringify({
+        response_type: "ephemeral",
+        text: `Error: ${error.message}`
+      })
+    };
   }
+}
 
-  const result = lookup(text);
-  if (result) return slackishResponse(result);
+function toLambdaLikeEvent(req, body) {
+  const url = new URL(req.url, "http://localhost");
 
-  const normalized = (text || "").trim();
-  if (!normalized) {
-    return slackishResponse("Try: MAAG or MACV");
-  }
+  return {
+    requestContext: { http: { method: req.method } },
+    rawPath: url.pathname,
+    queryStringParameters: Object.fromEntries(url.searchParams.entries()),
+    headers: req.headers,
+    body,
+    isBase64Encoded: false
+  };
+}
 
-  return slackishResponse(`Unknown acronym: ${normalized.toUpperCase()}`);
+function startLocalServer(port = 3000) {
+  const server = createServer((req, res) => {
+    const chunks = [];
+
+    req.on("data", (chunk) => chunks.push(chunk));
+    req.on("end", async () => {
+      const body = Buffer.concat(chunks).toString("utf8");
+      const event = toLambdaLikeEvent(req, body);
+
+      const out = await handler(event);
+
+      res.statusCode = out.statusCode || 200;
+      for (const [key, value] of Object.entries(out.headers || {})) {
+        res.setHeader(key, value);
+      }
+      res.end(out.body || "");
+    });
+  });
+
+  server.listen(port, () => {
+    console.log(`slacronym listening on http://localhost:${port}`);
+  });
 }
 
 /* Local dev server:
@@ -75,33 +212,6 @@ export async function handler(event = {}) {
    curl "http://localhost:3000/slacronym?text=MAAG"
 */
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const http = await import("node:http");
-
-  const server = http.createServer(async (req, res) => {
-    const url = new URL(req.url, "http://localhost");
-    const chunks = [];
-    req.on("data", (c) => chunks.push(c));
-    req.on("end", async () => {
-      const body = Buffer.concat(chunks).toString("utf8");
-
-      const event = {
-        requestContext: { http: { method: req.method } },
-        rawPath: url.pathname,
-        queryStringParameters: Object.fromEntries(url.searchParams.entries()),
-        headers: req.headers,
-        body,
-        isBase64Encoded: false
-      };
-
-      const out = await handler(event);
-      res.statusCode = out.statusCode || 200;
-      for (const [k, v] of Object.entries(out.headers || {})) res.setHeader(k, v);
-      res.end(out.body || "");
-    });
-  });
-
-  server.listen(3000, () => {
-    console.log("slacronym listening on http://localhost:3000");
-  });
+  startLocalServer();
 }
 

@@ -22,6 +22,11 @@ coverage/
 dist/
 build/
 .cache/
+deploy.zip
+
+# SAM
+.aws-sam/
+samconfig.toml.bak
 
 # Yarn Berry (Modern Yarn)
 .yarn/cache/
