@@ -1,0 +1,18 @@
+# Dependencies and build
+.yarn
+node_modules
+.aws-sam
+dist
+build
+.pnp.cjs
+.pnp.loader.mjs
+*.min.js
+
+# Lockfiles and generated
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+deploy.zip
+
+# Config that is not source
+samconfig.toml

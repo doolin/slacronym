@@ -4,27 +4,27 @@ import { handler } from "./index.mjs";
 const testEvent = {
   requestContext: {
     http: {
-      method: "GET"
-    }
+      method: "GET",
+    },
   },
   rawPath: "/slacronym",
   queryStringParameters: {
-    text: "MAAG"
+    text: "MAAG",
   },
-  headers: {}
+  headers: {},
 };
 
 console.log("Testing handler with event:", JSON.stringify(testEvent, null, 2));
 console.log("\n--- Handler Response ---\n");
 
 handler(testEvent)
-  .then(result => {
+  .then((result) => {
     console.log(JSON.stringify(result, null, 2));
     if (result.body) {
       console.log("\nParsed body:", JSON.parse(result.body));
     }
   })
-  .catch(error => {
+  .catch((error) => {
     console.error("Error:", error);
     process.exit(1);
   });

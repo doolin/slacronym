@@ -16,11 +16,12 @@ const ACRONYMS = {
   USN: "USN — United States Navy (military branch).",
   "R&R": "R&R — Rest and Recuperation (leave period for military personnel).",
   FOB: "FOB — Forward Operating Base (tactical military base).",
-  LZ: "LZ — Landing Zone (helicopter landing area)."
+  LZ: "LZ — Landing Zone (helicopter landing area).",
 };
 
 const SUPPORTED_PATHS = ["/", "/slacronym"];
-const SUGGESTION_TEXT = "Try: MAAG, MACV, ARVN, VC, NVA, DMZ, KIA, MIA, POW, USMC, USAF, USN, R&R, FOB, or LZ";
+const SUGGESTION_TEXT =
+  "Try: MAAG, MACV, ARVN, VC, NVA, DMZ, KIA, MIA, POW, USMC, USAF, USN, R&R, FOB, or LZ";
 
 function lookupAcronym(term) {
   if (!term) return null;
@@ -35,8 +36,8 @@ function slackEphemeral(text) {
     headers: { "content-type": "application/json; charset=utf-8" },
     body: JSON.stringify({
       response_type: "ephemeral",
-      text
-    })
+      text,
+    }),
   };
 }
 
@@ -44,15 +45,12 @@ function notFound() {
   return {
     statusCode: 404,
     headers: { "content-type": "text/plain" },
-    body: "not found"
+    body: "not found",
   };
 }
 
 function extractMethod(event = {}) {
-  const method =
-    event.requestContext?.http?.method ||
-    event.httpMethod ||
-    "GET";
+  const method = event.requestContext?.http?.method || event.httpMethod || "GET";
 
   return method.toUpperCase();
 }
@@ -78,7 +76,7 @@ function parseBody(event) {
   const isBase64 = event.isBase64Encoded === true;
 
   if (!body) return "";
-  
+
   try {
     return isBase64 ? Buffer.from(body, "base64").toString("utf8") : body;
   } catch (error) {
@@ -93,11 +91,8 @@ function normalizeHeaderName(name) {
 
 function extractContentType(headers = {}) {
   if (!headers || typeof headers !== "object") return "";
-  
-  const raw =
-    headers["content-type"] ||
-    headers["Content-Type"] ||
-    "";
+
+  const raw = headers["content-type"] || headers["Content-Type"] || "";
 
   return normalizeHeaderName(raw);
 }
@@ -112,7 +107,7 @@ function textFromJson(body) {
   try {
     const obj = JSON.parse(body);
     return obj.text || obj.term || "";
-  } catch (error) {
+  } catch {
     // Not valid JSON, return empty string
     return "";
   }
@@ -126,7 +121,7 @@ function extractTextFromEvent(event = {}) {
 
   const decodedBody = parseBody(event);
   if (!decodedBody) return extractTextFromQuery(qs);
-  
+
   const headers = event.headers || {};
   const contentType = extractContentType(headers);
 
@@ -146,11 +141,9 @@ function extractTextFromEvent(event = {}) {
 // Works for:
 // - Lambda Function URL / API Gateway (exports.handler)
 // - Local node server (node index.mjs)
-export async function handler(event = {}) {
+export function handler(event = {}) {
   try {
-    console.log("Handler invoked, event keys:", Object.keys(event));
     const path = extractPath(event);
-    console.log("Path:", path);
 
     if (!isKnownPath(path)) {
       return notFound();
@@ -158,7 +151,6 @@ export async function handler(event = {}) {
 
     const rawText = extractTextFromEvent(event);
     const normalized = rawText.trim();
-    console.log("Normalized text:", normalized);
 
     const found = lookupAcronym(normalized);
     if (found) return slackEphemeral(found);
@@ -171,14 +163,13 @@ export async function handler(event = {}) {
     return slackEphemeral(message);
   } catch (error) {
     console.error("Handler error:", error);
-    console.error("Error stack:", error.stack);
     return {
       statusCode: 500,
       headers: { "content-type": "application/json; charset=utf-8" },
       body: JSON.stringify({
         response_type: "ephemeral",
-        text: `Error: ${error.message}`
-      })
+        text: `Error: ${error.message}`,
+      }),
     };
   }
 }
@@ -192,7 +183,7 @@ function toLambdaLikeEvent(req, body) {
     queryStringParameters: Object.fromEntries(url.searchParams.entries()),
     headers: req.headers,
     body,
-    isBase64Encoded: false
+    isBase64Encoded: false,
   };
 }
 
@@ -227,4 +218,3 @@ function startLocalServer(port = 3000) {
 if (import.meta.url === `file://${process.argv[1]}`) {
   startLocalServer();
 }
-
