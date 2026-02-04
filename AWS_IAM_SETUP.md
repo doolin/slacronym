@@ -49,6 +49,7 @@ Create a role (e.g. `GitHubActionsCI`) with a trust policy that allows GitHub to
 ```
 
 Replace:
+
 - `ACCOUNT_ID` — Your AWS account ID
 - `OWNER/REPO` — Your GitHub org/user and repo name (e.g. `myorg/slacronym`)
 
@@ -72,9 +73,7 @@ Create a policy that allows uploading to your compliance bucket:
   "Statement": [
     {
       "Effect": "Allow",
-      "Action": [
-        "s3:PutObject"
-      ],
+      "Action": ["s3:PutObject"],
       "Resource": "arn:aws:s3:::your-compliance-bucket/slacronym/ci/*"
     }
   ]
