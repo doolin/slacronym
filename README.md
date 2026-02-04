@@ -79,6 +79,22 @@ A **GitHub Actions** workflow (`.github/workflows/ci.yml`) runs on push and pull
 
 Each artifact file is prefixed with `# commit:`, `# commitShort:`, and (where applicable) `# exitCode:` so you can tie results to a commit. The workflow uploads artifacts even when the step fails (`if: always()`). Download from Actions → run → Summary → Artifacts. Retention: 90 days.
 
+**S3 upload (optional):** The workflow can also upload artifacts to S3 for long-term compliance storage. Configure:
+
+1. **GitHub repository secrets:**
+   - `AWS_ROLE_ARN` — IAM role ARN (e.g. `arn:aws:iam::ACCOUNT:role/GitHubActionsCI`)
+
+2. **GitHub repository variables** (Settings → Secrets and variables → Actions → Variables):
+   - `S3_COMPLIANCE_BUCKET` — S3 bucket name (defaults to `your-compliance-bucket` if not set)
+   - `AWS_REGION` — AWS region (defaults to `us-west-1` if not set)
+
+3. **AWS IAM setup:** See [`AWS_IAM_SETUP.md`](./AWS_IAM_SETUP.md) for detailed steps:
+   - Create an OIDC provider for GitHub (`token.actions.githubusercontent.com`)
+   - Create an IAM role with trust policy allowing `repo:OWNER/REPO` to assume it
+   - Attach policy allowing `s3:PutObject` on your compliance bucket (e.g. `s3://bucket/slacronym/ci/*`)
+
+Artifacts upload to `s3://BUCKET/slacronym/ci/<commit-sha>/` (e.g. `s3://bucket/slacronym/ci/abc123/test-results.tap`). If OIDC isn’t configured, the S3 upload step is skipped (workflow still succeeds).
+
 **Out-of-band:** If your compliance process requires **JUnit XML** for tests instead of TAP, add a devDependency (e.g. `node-test-junit-reporter` or `tap-junit`) and a step that produces/upload JUnit; the current setup needs no extra dependencies.
 
 To run the same checks locally or in another CI (e.g. GitLab, Jenkins):

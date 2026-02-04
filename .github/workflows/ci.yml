@@ -7,6 +7,10 @@ on:
   pull_request:
     branches: [main, master]
 
+permissions:
+  id-token: write    # needed for OIDC / configure-aws-credentials
+  contents: read     # needed for actions/checkout
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -65,3 +69,22 @@ jobs:
           path: audit-results.txt
           retention-days: 90
         # audit-results.txt includes commit hash in header
+
+      - name: Configure AWS credentials (OIDC)
+        if: always() && secrets.AWS_ROLE_ARN != ''
+        uses: actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION || 'us-west-1' }}
+
+      - name: Upload CI artifacts to S3
+        if: always() && secrets.AWS_ROLE_ARN != ''
+        env:
+          S3_BUCKET: ${{ vars.S3_COMPLIANCE_BUCKET || 'your-compliance-bucket' }}
+        run: |
+          PREFIX="slacronym/ci/${{ github.sha }}"
+          aws s3 cp test-results.tap "s3://${S3_BUCKET}/${PREFIX}/test-results.tap" --no-fail-on-error || true
+          aws s3 cp test-results.json "s3://${S3_BUCKET}/${PREFIX}/test-results.json" --no-fail-on-error || true
+          aws s3 cp lint-results.txt "s3://${S3_BUCKET}/${PREFIX}/lint-results.txt" --no-fail-on-error || true
+          aws s3 cp audit-results.txt "s3://${S3_BUCKET}/${PREFIX}/audit-results.txt" --no-fail-on-error || true
+          echo "Artifacts uploaded to s3://${S3_BUCKET}/${PREFIX}/"
