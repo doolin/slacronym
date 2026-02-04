@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "node index.mjs",
     "deploy": "./deploy.sh",
+    "test": "node --test index.test.mjs",
+    "test:ci": "./scripts/test-ci.sh",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",

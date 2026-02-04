@@ -54,6 +54,8 @@ Uses `AWS_PROFILE=terraformer` and `AWS_REGION=us-west-1` by default. The script
 |----------------|----------------------------|
 | `yarn dev`     | Run local server           |
 | `yarn deploy`  | Deploy to Lambda           |
+| `yarn test`    | Run tests (Node built-in runner) |
+| `yarn test:ci` | Run tests and write artifacts (TAP + JSON) for CI |
 | `yarn lint`    | Run ESLint                 |
 | `yarn lint:fix`| ESLint with auto-fix       |
 | `yarn format`  | Format with Prettier       |
@@ -62,16 +64,28 @@ Uses `AWS_PROFILE=terraformer` and `AWS_REGION=us-west-1` by default. The script
 
 ## CI/CD
 
-Run before deploy or on every PR:
+A **GitHub Actions** workflow (`.github/workflows/ci.yml`) runs on push and pull requests to `main`/`master`: install, test, lint, format check, and audit. No secrets required.
+
+**Compliance / test artifacts:** Each test run produces uploadable artifacts for audit trails:
+
+- **`test-results.tap`** — Full run in [TAP](https://testanything.org/) format (standard, machine-readable).
+- **`test-results.json`** — Summary with `timestamp`, `exitCode`, `success`, `commit` (full SHA), and `commitShort` (7-char SHA for display).
+
+The workflow runs `yarn test:ci` (see `scripts/test-ci.sh`), then uploads these as the **test-results** artifact (90-day retention). Artifacts are uploaded even when tests fail (`if: always()`). Download from the Actions run page → Summary → Artifacts.
+
+**Out-of-band:** If your compliance process requires **JUnit XML** instead of TAP, add a devDependency (e.g. `node-test-junit-reporter` or `tap-junit`) and a step that converts TAP to JUnit or runs the test runner with a JUnit reporter, then upload the XML as well. The current setup needs no extra dependencies.
+
+To run the same checks locally or in another CI (e.g. GitLab, Jenkins):
 
 ```bash
-yarn install --immutable   # or your install step
-yarn audit                 # exit non-zero if any vulnerabilities
+yarn install --immutable
+yarn test
 yarn lint
 yarn format:check
+yarn audit
 ```
 
-`yarn audit` runs Yarn’s built-in audit (same data as npm audit). The pipeline fails when the audit reports vulnerabilities.
+Each step exits non-zero on failure so the pipeline fails correctly. `yarn audit` uses Yarn’s built-in audit (same data as npm audit).
 
 ## Adding acronyms
 
