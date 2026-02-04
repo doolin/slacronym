@@ -1,3 +1,4 @@
+# CI: test, lint, format check, audit. Uploads compliance artifacts (with commit hash) for each run.
 name: CI
 
 on:
@@ -36,12 +37,31 @@ jobs:
             test-results.tap
             test-results.json
           retention-days: 90
+        # Artifacts include commit hash (GITHUB_SHA) in file headers for compliance
 
       - name: Lint
-        run: yarn lint
+        run: yarn lint:ci
+
+      - name: Upload lint artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-results
+          path: lint-results.txt
+          retention-days: 90
+        # lint-results.txt includes commit hash in header
 
       - name: Check formatting
         run: yarn format:check
 
       - name: Audit dependencies
-        run: yarn audit
+        run: yarn audit:ci
+
+      - name: Upload audit artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-results
+          path: audit-results.txt
+          retention-days: 90
+        # audit-results.txt includes commit hash in header

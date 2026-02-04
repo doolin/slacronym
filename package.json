@@ -9,10 +9,12 @@
     "test": "node --test index.test.mjs",
     "test:ci": "./scripts/test-ci.sh",
     "lint": "eslint .",
+    "lint:ci": "./scripts/lint-ci.sh",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "audit": "yarn npm audit"
+    "audit": "yarn npm audit",
+    "audit:ci": "./scripts/audit-ci.sh"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
