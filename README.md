@@ -50,19 +50,20 @@ Uses `AWS_PROFILE=terraformer` and `AWS_REGION=us-west-1` by default. The script
 
 ## Scripts
 
-| Script         | Description                |
-|----------------|----------------------------|
-| `yarn dev`     | Run local server           |
-| `yarn deploy`  | Deploy to Lambda           |
-| `yarn test`    | Run tests (Node built-in runner) |
-| `yarn test:ci` | Run tests and write artifacts (TAP + JSON) for CI |
-| `yarn lint:ci` | Run ESLint and write lint-results.txt with commit for CI |
-| `yarn audit:ci`| Run audit and write audit-results.txt with commit for CI |
-| `yarn lint`    | Run ESLint                 |
-| `yarn lint:fix`| ESLint with auto-fix       |
-| `yarn format`  | Format with Prettier       |
-| `yarn format:check` | Check formatting only |
-| `yarn audit`   | Run dependency vulnerability audit (exit non-zero if vulns found); use in CI |
+| Script              | Description                                                                  |
+| ------------------- | ---------------------------------------------------------------------------- |
+| `yarn dev`          | Run local server                                                             |
+| `yarn deploy`       | Deploy to Lambda                                                             |
+| `yarn test`         | Run tests (Node built-in runner)                                             |
+| `yarn test:ci`      | Run tests and write artifacts (TAP + JSON) for CI                            |
+| `yarn lint:ci`      | Run ESLint and write lint-results.txt with commit for CI                     |
+| `yarn audit:ci`     | Run audit and write audit-results.txt with commit for CI                     |
+| `yarn lint`         | Run ESLint                                                                   |
+| `yarn lint:fix`     | ESLint with auto-fix                                                         |
+| `yarn format`       | Format with Prettier                                                         |
+| `yarn format:check` | Check formatting only                                                        |
+| `yarn check`        | Run lint + format check (same as CI; run before pushing)                     |
+| `yarn audit`        | Run dependency vulnerability audit (exit non-zero if vulns found); use in CI |
 
 ## CI/CD
 
@@ -70,11 +71,11 @@ A **GitHub Actions** workflow (`.github/workflows/ci.yml`) runs on push and pull
 
 **Compliance artifacts:** Each CI run produces uploadable artifacts (all include commit hash in a header):
 
-| Artifact        | Contents                                      | Script           |
-|-----------------|-----------------------------------------------|------------------|
-| **test-results**| `test-results.tap` (TAP), `test-results.json` | `yarn test:ci`   |
-| **lint-results**| `lint-results.txt` (ESLint output)             | `yarn lint:ci`   |
-| **audit-results** | `audit-results.txt` (dependency audit)      | `yarn audit:ci`  |
+| Artifact          | Contents                                      | Script          |
+| ----------------- | --------------------------------------------- | --------------- |
+| **test-results**  | `test-results.tap` (TAP), `test-results.json` | `yarn test:ci`  |
+| **lint-results**  | `lint-results.txt` (ESLint output)            | `yarn lint:ci`  |
+| **audit-results** | `audit-results.txt` (dependency audit)        | `yarn audit:ci` |
 
 Each artifact file is prefixed with `# commit:`, `# commitShort:`, and (where applicable) `# exitCode:` so you can tie results to a commit. The workflow uploads artifacts even when the step fails (`if: always()`). Download from Actions → run → Summary → Artifacts. Retention: 90 days.
 
@@ -85,8 +86,7 @@ To run the same checks locally or in another CI (e.g. GitLab, Jenkins):
 ```bash
 yarn install --immutable
 yarn test
-yarn lint
-yarn format:check
+yarn check    # lint + format check (or run yarn lint && yarn format:check)
 yarn audit
 ```
 
