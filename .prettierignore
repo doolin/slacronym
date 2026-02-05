@@ -1,7 +1,6 @@
 # Dependencies and build
 .yarn
 node_modules
-.aws-sam
 dist
 build
 .pnp.cjs
@@ -15,4 +14,3 @@ pnpm-lock.yaml
 deploy.zip
 
 # Config that is not source
-samconfig.toml
