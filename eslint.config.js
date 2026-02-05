@@ -4,15 +4,7 @@ import globals from "globals";
 
 export default [
   {
-    ignores: [
-      ".yarn/**",
-      "node_modules/**",
-      ".aws-sam/**",
-      "dist/**",
-      "build/**",
-      "*.cjs",
-      "*.config.cjs",
-    ],
+    ignores: [".yarn/**", "node_modules/**", "dist/**", "build/**", "*.cjs", "*.config.cjs"],
   },
   js.configs.recommended,
   {

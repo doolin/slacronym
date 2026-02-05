@@ -32,10 +32,6 @@ lint-results.raw.txt
 audit-results.txt
 audit-results.raw.txt
 
-# SAM
-.aws-sam/
-samconfig.toml.bak
-
 # Yarn Berry (Modern Yarn)
 .yarn/cache/
 .yarn/unplugged/
