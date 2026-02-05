@@ -2,27 +2,13 @@ import { createServer } from "node:http";
 
 // Inline acronym definitions to avoid reading a separate JSON file
 const ACRONYMS = {
-  MAAG: "MAAG — Military Assistance Advisory Group (U.S. advisory mission).",
-  MACV: "MACV — Military Assistance Command, Vietnam (U.S. command in Vietnam).",
-  ARVN: "ARVN — Army of the Republic of Vietnam (South Vietnamese army).",
-  VC: "VC — Viet Cong (Vietnamese communist forces).",
-  NVA: "NVA — North Vietnamese Army (regular forces of North Vietnam).",
-  DMZ: "DMZ — Demilitarized Zone (border zone between North and South Vietnam).",
-  KIA: "KIA — Killed in Action (military casualty classification).",
-  MIA: "MIA — Missing in Action (personnel unaccounted for).",
-  POW: "POW — Prisoner of War (captured military personnel).",
-  USMC: "USMC — United States Marine Corps (military branch).",
-  USAF: "USAF — United States Air Force (military branch).",
-  USN: "USN — United States Navy (military branch).",
-  "R&R": "R&R — Rest and Recuperation (leave period for military personnel).",
-  FOB: "FOB — Forward Operating Base (tactical military base).",
-  LZ: "LZ — Landing Zone (helicopter landing area).",
-  FSB: "FSB - Fire Support Base (tactical military base).",
+  BD: "BD — Borrower Defense.",
+  ISSO: "ISSO — Information Systems Security Officer.",
 };
 
 const SUPPORTED_PATHS = ["/", "/slacronym"];
 const SUGGESTION_TEXT =
-  "Try: MAAG, MACV, ARVN, VC, NVA, DMZ, KIA, MIA, POW, USMC, USAF, USN, R&R, FOB, or LZ";
+  "Try: BD, or ISSO";
 
 function lookupAcronym(term) {
   if (!term) return null;
