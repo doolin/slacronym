@@ -4,6 +4,12 @@ Slack-style acronym lookup service. Looks up military (Vietnam-era) acronyms and
 
 Runs as a **Lambda function** behind a **Function URL** (no API Gateway or CloudFront). Infrastructure is managed by Terraform; this repo holds the application code and deploys via `deploy.sh`.
 
+## In operation
+
+- [From the function
+  url](https://hcldim6vnn7xswxjnt66ucwy5e0cqeps.lambda-url.us-west-1.on.aws/slacronym?text=ARVN)
+- [Served by Club Straylight](https://clubstraylight.com/slacronym?text=FSB)
+
 ## Prerequisites
 
 - Node.js 20.x (or 18.x)
