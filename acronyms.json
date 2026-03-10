@@ -15,5 +15,18 @@
   "R&R": "R&R — Rest and Recuperation (leave period for military personnel).",
   "FOB": "FOB — Forward Operating Base (tactical military base).",
   "LZ": "LZ — Landing Zone (helicopter landing area).",
-  "FSB": "FSB - Fire Support Base (tactical military base)."
+  "FSB": "FSB - Fire Support Base (tactical military base).",
+  "PAVN": "PAVN — People's Army of Vietnam (official name for North Vietnam's military).",
+  "DRV": "DRV — Democratic Republic of Vietnam (North Vietnam).",
+  "RVN": "RVN — Republic of Vietnam (South Vietnam).",
+  "NLF": "NLF — National Liberation Front (political/military organization commonly called the Viet Cong).",
+  "PRG": "PRG — Provisional Revolutionary Government (southern communist political authority formed during the war).",
+  "CORDS": "CORDS — Civil Operations and Revolutionary Development Support (U.S.-South Vietnamese pacification program).",
+  "CIDG": "CIDG — Civilian Irregular Defense Group (local forces organized with U.S. Special Forces support).",
+  "SOG": "SOG — Studies and Observations Group (U.S. special operations unit, MACV-SOG).",
+  "LRRP": "LRRP — Long-Range Reconnaissance Patrol (small deep-recon units).",
+  "TOC": "TOC — Tactical Operations Center (unit command and control center).",
+  "RTO": "RTO — Radio Telephone Operator (soldier handling communications).",
+  "PBR": "PBR — Patrol Boat, River (U.S. Navy riverine patrol craft).",
+  "VCI": "VCI — Viet Cong Infrastructure (covert communist political/support network)."
 }

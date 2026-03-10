@@ -1,0 +1,15 @@
+---
+description: Acronym update policy for acronyms.json
+globs: acronyms.json
+alwaysApply: false
+---
+
+# Acronym Update Policy
+
+When adding new acronyms to `acronyms.json`:
+
+- Append new acronyms at the end of the file.
+- Add new acronyms in groups of exactly 10 per batch.
+- Before staging or committing, verify no newly added acronym key duplicates any existing key.
+- If a batch has more than 10 new acronyms, split it into multiple appended groups of 10.
+- Keep acronym keys uppercase and definitions concise.
