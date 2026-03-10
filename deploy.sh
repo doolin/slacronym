@@ -20,6 +20,7 @@ trap "rm -rf $TEMP_DIR" EXIT
 # Copy production files only (no devDependencies, no dev scripts)
 # Lambda expects index.js (not index.mjs) for ES modules
 cp index.mjs "$TEMP_DIR/index.js"
+cp acronyms.json "$TEMP_DIR/acronyms.json"
 cp package.prod.json "$TEMP_DIR/package.json"
 
 # Create zip file

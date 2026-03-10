@@ -1,28 +1,42 @@
 import { createServer } from "node:http";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
-// Inline acronym definitions to avoid reading a separate JSON file
-const ACRONYMS = {
-  MAAG: "MAAG — Military Assistance Advisory Group (U.S. advisory mission).",
-  MACV: "MACV — Military Assistance Command, Vietnam (U.S. command in Vietnam).",
-  ARVN: "ARVN — Army of the Republic of Vietnam (South Vietnamese army).",
-  VC: "VC — Viet Cong (Vietnamese communist forces).",
-  NVA: "NVA — North Vietnamese Army (regular forces of North Vietnam).",
-  DMZ: "DMZ — Demilitarized Zone (border zone between North and South Vietnam).",
-  KIA: "KIA — Killed in Action (military casualty classification).",
-  MIA: "MIA — Missing in Action (personnel unaccounted for).",
-  POW: "POW — Prisoner of War (captured military personnel).",
-  USMC: "USMC — United States Marine Corps (military branch).",
-  USAF: "USAF — United States Air Force (military branch).",
-  USN: "USN — United States Navy (military branch).",
-  "R&R": "R&R — Rest and Recuperation (leave period for military personnel).",
-  FOB: "FOB — Forward Operating Base (tactical military base).",
-  LZ: "LZ — Landing Zone (helicopter landing area).",
-  FSB: "FSB - Fire Support Base (tactical military base).",
-};
+const moduleFilename = fileURLToPath(import.meta.url);
+const moduleDirname = dirname(moduleFilename);
+const ACRONYMS_PATH = join(moduleDirname, "acronyms.json");
+
+function loadAcronyms() {
+  try {
+    const raw = readFileSync(ACRONYMS_PATH, "utf8");
+    const parsed = JSON.parse(raw);
+
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      throw new Error("acronyms.json must contain a JSON object at the root");
+    }
+
+    return Object.freeze(parsed);
+  } catch (error) {
+    console.error("Failed to load acronyms.json:", error);
+    return Object.freeze({});
+  }
+}
+
+const ACRONYMS = loadAcronyms();
 
 const SUPPORTED_PATHS = ["/", "/slacronym"];
-const SUGGESTION_TEXT =
-  "Try: MAAG, MACV, ARVN, VC, NVA, DMZ, KIA, MIA, POW, USMC, USAF, USN, R&R, FOB, or LZ";
+function buildSuggestionText() {
+  const keys = Object.keys(ACRONYMS);
+  if (keys.length === 0) return "No acronyms configured.";
+  if (keys.length === 1) return `Try: ${keys[0]}`;
+
+  const prefix = keys.slice(0, -1).join(", ");
+  const suffix = keys[keys.length - 1];
+  return `Try: ${prefix}, or ${suffix}`;
+}
+
+const SUGGESTION_TEXT = buildSuggestionText();
 
 function lookupAcronym(term) {
   if (!term) return null;

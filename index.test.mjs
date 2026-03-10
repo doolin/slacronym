@@ -45,6 +45,15 @@ test("handler returns 200 and definition for known acronym (term param)", () => 
   assert.ok(data.text.includes("Viet Cong"));
 });
 
+test("handler returns 200 and definition for added Vietnam War ally acronym", () => {
+  const event = functionUrlEvent({ path: "/slacronym", query: { text: "ROK" } });
+  const res = handler(event);
+
+  assert.strictEqual(res.statusCode, 200);
+  const data = JSON.parse(res.body);
+  assert.ok(data.text.includes("Republic of Korea"));
+});
+
 test("handler returns 200 and suggestion when text is empty", () => {
   const event = functionUrlEvent({ path: "/slacronym", query: {} });
   const res = handler(event);
@@ -52,6 +61,7 @@ test("handler returns 200 and suggestion when text is empty", () => {
   assert.strictEqual(res.statusCode, 200);
   const data = JSON.parse(res.body);
   assert.ok(data.text.includes("Try:"));
+  assert.ok(data.text.includes("FSB"));
 });
 
 test("handler returns 200 and unknown message for unknown acronym", () => {

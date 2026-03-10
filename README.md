@@ -52,7 +52,7 @@ yarn deploy
 ./deploy.sh
 ```
 
-Uses `AWS_PROFILE=terraformer` and `AWS_REGION=us-west-1` by default. The script packages only production artifacts: `index.mjs` (as `index.js`) and `package.prod.json` (as `package.json`). **Development tooling is not deployed** — no devDependencies, no lint/format/audit scripts. Keep `package.prod.json` in sync with `package.json` for `name`/`version` if you change them. Runtime and handler are managed by Terraform.
+Uses `AWS_PROFILE=terraformer` and `AWS_REGION=us-west-1` by default. The script packages only production artifacts: `index.mjs` (as `index.js`), `acronyms.json`, and `package.prod.json` (as `package.json`). **Development tooling is not deployed** — no devDependencies, no lint/format/audit scripts. Keep `package.prod.json` in sync with `package.json` for `name`/`version` if you change them. Runtime and handler are managed by Terraform.
 
 ## Scripts
 
@@ -118,7 +118,7 @@ Each step exits non-zero on failure so the pipeline fails correctly. `yarn audit
 
 ## Adding acronyms
 
-Edit the `ACRONYMS` object at the top of `index.mjs`. Keys are uppercase; values are the definition string returned to the client.
+Edit `acronyms.json`. Keys are uppercase; values are the definition string returned to the client.
 
 ## License
 
