@@ -77,14 +77,31 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION || 'us-west-1' }}
 
-      - name: Upload CI artifacts to S3
-        if: always() && vars.S3_COMPLIANCE_BUCKET != ''
+      - name: Write Solana keypair to temp file
+        if: always() && vars.S3_COMPLIANCE_BUCKET != '' && secrets.SOLANA_KEYPAIR != ''
+        run: |
+          KEYPAIR_FILE=$(mktemp)
+          echo '${{ secrets.SOLANA_KEYPAIR }}' > "$KEYPAIR_FILE"
+          chmod 600 "$KEYPAIR_FILE"
+          echo "SOLANA_KEYPAIR_PATH=$KEYPAIR_FILE" >> "$GITHUB_ENV"
+
+      - name: Attest CI artifacts on Solana
+        if: always() && vars.S3_COMPLIANCE_BUCKET != '' && secrets.SOLANA_KEYPAIR != ''
         env:
           S3_BUCKET: ${{ vars.S3_COMPLIANCE_BUCKET }}
-        run: |
-          PREFIX="slacronym/ci/${{ github.sha }}"
-          aws s3 cp test-results.tap "s3://${S3_BUCKET}/${PREFIX}/test-results.tap"
-          aws s3 cp test-results.json "s3://${S3_BUCKET}/${PREFIX}/test-results.json"
-          aws s3 cp lint-results.txt "s3://${S3_BUCKET}/${PREFIX}/lint-results.txt"
-          aws s3 cp audit-results.txt "s3://${S3_BUCKET}/${PREFIX}/audit-results.txt"
-          echo "Artifacts uploaded to s3://${S3_BUCKET}/${PREFIX}/"
+          SOLANA_NETWORK: devnet
+        run: node scripts/attest.mjs
+
+      - name: Upload attestation artifacts
+        if: always() && vars.S3_COMPLIANCE_BUCKET != '' && secrets.SOLANA_KEYPAIR != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: attestation
+          path: |
+            ci-artifacts.zip
+            attestation.pdf
+          retention-days: 90
+
+      - name: Cleanup keypair
+        if: always()
+        run: rm -f "$SOLANA_KEYPAIR_PATH"
