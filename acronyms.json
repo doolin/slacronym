@@ -28,5 +28,6 @@
   "TOC": "TOC — Tactical Operations Center (unit command and control center).",
   "RTO": "RTO — Radio Telephone Operator (soldier handling communications).",
   "PBR": "PBR — Patrol Boat, River (U.S. Navy riverine patrol craft).",
-  "VCI": "VCI — Viet Cong Infrastructure (covert communist political/support network)."
+  "VCI": "VCI — Viet Cong Infrastructure (covert communist political/support network).",
+  "DEROS": "DEROS — Date Eligible for Return from Overseas (scheduled rotation date for personnel)."
 }
