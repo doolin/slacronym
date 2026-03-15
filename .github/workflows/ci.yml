@@ -84,7 +84,7 @@ jobs:
         run: |
           if [ -n "$SOLANA_KEYPAIR" ]; then
             KEYPAIR_FILE=$(mktemp)
-            echo "$SOLANA_KEYPAIR" > "$KEYPAIR_FILE"
+            printf '%s' "$SOLANA_KEYPAIR" > "$KEYPAIR_FILE"
             chmod 600 "$KEYPAIR_FILE"
             echo "SOLANA_KEYPAIR_PATH=$KEYPAIR_FILE" >> "$GITHUB_ENV"
           fi
