@@ -90,7 +90,7 @@ jobs:
         env:
           S3_BUCKET: ${{ vars.S3_COMPLIANCE_BUCKET }}
           SOLANA_NETWORK: devnet
-        run: node scripts/attest.mjs
+        run: yarn attest
 
       - name: Upload attestation artifacts
         if: always() && vars.S3_COMPLIANCE_BUCKET != '' && secrets.SOLANA_KEYPAIR != ''
