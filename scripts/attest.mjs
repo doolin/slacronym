@@ -61,24 +61,25 @@ function getCommitSha() {
   }
 }
 
-function buildS3Prefix(commitShort) {
-  const now = new Date();
-  const yyyy = now.getUTCFullYear();
-  const mm = String(now.getUTCMonth() + 1).padStart(2, "0");
-  const dd = String(now.getUTCDate()).padStart(2, "0");
-  const hh = String(now.getUTCHours()).padStart(2, "0");
-  const min = String(now.getUTCMinutes()).padStart(2, "0");
-  const ss = String(now.getUTCSeconds()).padStart(2, "0");
+function buildS3Prefix(startTime, commitShort) {
+  const yyyy = startTime.getUTCFullYear();
+  const mm = String(startTime.getUTCMonth() + 1).padStart(2, "0");
+  const dd = String(startTime.getUTCDate()).padStart(2, "0");
+  const hh = String(startTime.getUTCHours()).padStart(2, "0");
+  const min = String(startTime.getUTCMinutes()).padStart(2, "0");
+  const ss = String(startTime.getUTCSeconds()).padStart(2, "0");
   return `slacronym/ci/${yyyy}/${mm}/${dd}/${hh}${min}${ss}-${commitShort}`;
 }
 
 function getConfig() {
   const commitSha = getCommitSha();
   const commitShort = commitSha.slice(0, 7);
+  const startTime = new Date();
   return {
     commitSha,
     commitShort,
-    s3Prefix: buildS3Prefix(commitShort),
+    startTime,
+    s3Prefix: buildS3Prefix(startTime, commitShort),
     bucket: process.env.S3_BUCKET || "",
     keypairPath: process.env.SOLANA_KEYPAIR_PATH || "",
     network: process.env.SOLANA_NETWORK || "devnet",
@@ -139,7 +140,7 @@ function expandHome(p) {
 
 function loadKeypair(path) {
   const expanded = resolve(expandHome(path));
-  const bytes = JSON.parse(readFileSync(expanded, "utf8"));
+  const bytes = JSON.parse(readFileSync(expanded, "utf8").trim());
   if (!Array.isArray(bytes) || bytes.length !== 64) {
     throw new Error("Keypair must be a 64-byte JSON array");
   }
@@ -356,7 +357,7 @@ async function main() {
     solanaNetwork: config.network,
     solanaTxSignature: null,
     solanaError: null,
-    completedAt: new Date().toISOString(),
+    completedAt: config.startTime.toISOString(),
     steps,
   };
 
