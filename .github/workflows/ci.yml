@@ -78,22 +78,26 @@ jobs:
           aws-region: ${{ vars.AWS_REGION || 'us-west-1' }}
 
       - name: Write Solana keypair to temp file
-        if: always() && vars.S3_COMPLIANCE_BUCKET != '' && secrets.SOLANA_KEYPAIR != ''
+        if: always() && vars.S3_COMPLIANCE_BUCKET != ''
+        env:
+          SOLANA_KEYPAIR: ${{ secrets.SOLANA_KEYPAIR }}
         run: |
-          KEYPAIR_FILE=$(mktemp)
-          echo '${{ secrets.SOLANA_KEYPAIR }}' > "$KEYPAIR_FILE"
-          chmod 600 "$KEYPAIR_FILE"
-          echo "SOLANA_KEYPAIR_PATH=$KEYPAIR_FILE" >> "$GITHUB_ENV"
+          if [ -n "$SOLANA_KEYPAIR" ]; then
+            KEYPAIR_FILE=$(mktemp)
+            echo "$SOLANA_KEYPAIR" > "$KEYPAIR_FILE"
+            chmod 600 "$KEYPAIR_FILE"
+            echo "SOLANA_KEYPAIR_PATH=$KEYPAIR_FILE" >> "$GITHUB_ENV"
+          fi
 
       - name: Attest CI artifacts on Solana
-        if: always() && vars.S3_COMPLIANCE_BUCKET != '' && secrets.SOLANA_KEYPAIR != ''
+        if: always() && vars.S3_COMPLIANCE_BUCKET != ''
         env:
           S3_BUCKET: ${{ vars.S3_COMPLIANCE_BUCKET }}
           SOLANA_NETWORK: devnet
         run: yarn attest
 
       - name: Upload attestation artifacts
-        if: always() && vars.S3_COMPLIANCE_BUCKET != '' && secrets.SOLANA_KEYPAIR != ''
+        if: always() && vars.S3_COMPLIANCE_BUCKET != ''
         uses: actions/upload-artifact@v4
         with:
           name: attestation
