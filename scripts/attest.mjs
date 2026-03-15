@@ -237,7 +237,8 @@ function renderBlockchainAnchor(doc, evidence) {
   doc.moveDown(0.3);
 
   if (evidence.solanaTxSignature) {
-    const cluster = evidence.solanaNetwork === "mainnet-beta" ? "" : `?cluster=${evidence.solanaNetwork}`;
+    const cluster =
+      evidence.solanaNetwork === "mainnet-beta" ? "" : `?cluster=${evidence.solanaNetwork}`;
     const explorerUrl = `https://explorer.solana.com/tx/${evidence.solanaTxSignature}${cluster}`;
 
     doc.fontSize(10).font("Helvetica");
@@ -295,7 +296,7 @@ function renderAttestation(doc, evidence) {
       `for commit ${evidence.commitSha} of the slacronym repository. Test, lint, and ` +
       `audit artifacts were collected, archived into a zip file, and checksummed ` +
       `using SHA-256.${solanaClause} The archive and this attestation were uploaded ` +
-      `to S3 for compliance record-keeping.`,
+      `to S3 for compliance record-keeping.`
   );
 }
 
