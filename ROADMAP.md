@@ -2,6 +2,9 @@
 
 # Solana integration for CI/CD
 
+- [x] initial work is done.
+- [ ] next phase is importantizing the PDF output with fancy formatting, branding, bunch of crap which looks impressive.
+
 ## Next application milestones
 
 1. Lock down Slack-formatted responses with request authentication from a Slack instance.
