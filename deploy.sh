@@ -5,7 +5,11 @@ set -euo pipefail
 # Configuration (hard-coded function name)
 FUNCTION_NAME="slacronym"
 REGION="${AWS_REGION:-us-west-1}"
-AWS_PROFILE="${AWS_PROFILE:-terraformer}"
+if [ "${CI:-}" = "true" ]; then
+  AWS_PROFILE=""
+else
+  AWS_PROFILE="${AWS_PROFILE:-terraformer}"
+fi
 
 # Build AWS CLI args
 AWS_CLI_ARGS=("--region" "$REGION")

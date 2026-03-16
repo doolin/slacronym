@@ -1,136 +1,164 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Slacronym</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: system-ui, -apple-system, sans-serif;
-      background: #1a1a2e;
-      color: #e0e0e0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 3rem 1rem;
-    }
-    h1 { font-size: 2rem; margin-bottom: 0.25rem; color: #e2e8f0; }
-    .subtitle { color: #94a3b8; margin-bottom: 2rem; font-size: 0.95rem; }
-    form {
-      display: flex;
-      gap: 0.5rem;
-      width: 100%;
-      max-width: 28rem;
-      margin-bottom: 1.5rem;
-    }
-    input {
-      flex: 1;
-      padding: 0.6rem 1rem;
-      border: 1px solid #334155;
-      border-radius: 6px;
-      background: #0f172a;
-      color: #e2e8f0;
-      font-size: 1rem;
-      outline: none;
-    }
-    input:focus { border-color: #60a5fa; }
-    button {
-      padding: 0.6rem 1.25rem;
-      border: none;
-      border-radius: 6px;
-      background: #3b82f6;
-      color: #fff;
-      font-size: 1rem;
-      cursor: pointer;
-    }
-    button:hover { background: #2563eb; }
-    #result {
-      width: 100%;
-      max-width: 28rem;
-      min-height: 3rem;
-      padding: 1rem;
-      border-radius: 6px;
-      background: #0f172a;
-      border: 1px solid #334155;
-      line-height: 1.5;
-    }
-    #result:empty { display: none; }
-    .acronyms {
-      margin-top: 3rem;
-      width: 100%;
-      max-width: 28rem;
-    }
-    .acronyms h2 { font-size: 1rem; color: #94a3b8; margin-bottom: 0.75rem; }
-    .acronyms ul {
-      list-style: none;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-    }
-    .acronyms li {
-      background: #0f172a;
-      border: 1px solid #334155;
-      border-radius: 4px;
-      padding: 0.25rem 0.6rem;
-      font-size: 0.85rem;
-      cursor: pointer;
-      color: #93c5fd;
-    }
-    .acronyms li:hover { background: #1e293b; border-color: #60a5fa; }
-  </style>
-</head>
-<body>
-  <h1>Slacronym</h1>
-  <p class="subtitle">Vietnam-era military acronym lookup</p>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Slacronym</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: #1a1a2e;
+        color: #e0e0e0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 3rem 1rem;
+      }
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 0.25rem;
+        color: #e2e8f0;
+      }
+      .subtitle {
+        color: #94a3b8;
+        margin-bottom: 2rem;
+        font-size: 0.95rem;
+      }
+      form {
+        display: flex;
+        gap: 0.5rem;
+        width: 100%;
+        max-width: 28rem;
+        margin-bottom: 1.5rem;
+      }
+      input {
+        flex: 1;
+        padding: 0.6rem 1rem;
+        border: 1px solid #334155;
+        border-radius: 6px;
+        background: #0f172a;
+        color: #e2e8f0;
+        font-size: 1rem;
+        outline: none;
+      }
+      input:focus {
+        border-color: #60a5fa;
+      }
+      button {
+        padding: 0.6rem 1.25rem;
+        border: none;
+        border-radius: 6px;
+        background: #3b82f6;
+        color: #fff;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #2563eb;
+      }
+      #result {
+        width: 100%;
+        max-width: 28rem;
+        min-height: 3rem;
+        padding: 1rem;
+        border-radius: 6px;
+        background: #0f172a;
+        border: 1px solid #334155;
+        line-height: 1.5;
+      }
+      #result:empty {
+        display: none;
+      }
+      .acronyms {
+        margin-top: 3rem;
+        width: 100%;
+        max-width: 28rem;
+      }
+      .acronyms h2 {
+        font-size: 1rem;
+        color: #94a3b8;
+        margin-bottom: 0.75rem;
+      }
+      .acronyms ul {
+        list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+      .acronyms li {
+        background: #0f172a;
+        border: 1px solid #334155;
+        border-radius: 4px;
+        padding: 0.25rem 0.6rem;
+        font-size: 0.85rem;
+        cursor: pointer;
+        color: #93c5fd;
+      }
+      .acronyms li:hover {
+        background: #1e293b;
+        border-color: #60a5fa;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Slacronym</h1>
+    <p class="subtitle">Vietnam-era military acronym lookup</p>
 
-  <form id="lookup-form">
-    <input type="text" id="term" placeholder="Enter an acronym..." autocomplete="off" autofocus>
-    <button type="submit">Look up</button>
-  </form>
+    <form id="lookup-form">
+      <input type="text" id="term" placeholder="Enter an acronym..." autocomplete="off" autofocus />
+      <button type="submit">Look up</button>
+    </form>
 
-  <div id="result"></div>
+    <div id="result"></div>
 
-  <div class="acronyms">
-    <h2>Available acronyms</h2>
-    <ul id="acronym-list"></ul>
-  </div>
+    <div class="acronyms">
+      <h2>Available acronyms</h2>
+      <ul id="acronym-list"></ul>
+    </div>
 
-  <script>
-    const form = document.getElementById('lookup-form');
-    const input = document.getElementById('term');
-    const result = document.getElementById('result');
-    const list = document.getElementById('acronym-list');
+    <script>
+      const form = document.getElementById("lookup-form");
+      const input = document.getElementById("term");
+      const result = document.getElementById("result");
+      const list = document.getElementById("acronym-list");
 
-    async function lookup(term) {
-      const res = await fetch(`/slacronym?term=${encodeURIComponent(term)}`, {
-        headers: { 'Accept': 'application/json' }
+      async function lookup(term) {
+        const res = await fetch(`/slacronym?term=${encodeURIComponent(term)}`, {
+          headers: { Accept: "application/json" },
+        });
+        const data = await res.json();
+        result.textContent = data.text;
+      }
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const term = input.value.trim();
+        if (term) lookup(term);
       });
-      const data = await res.json();
-      result.textContent = data.text;
-    }
 
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const term = input.value.trim();
-      if (term) lookup(term);
-    });
-
-    // Load acronym list and render clickable tags
-    fetch('/acronyms.json')
-      .then(r => r.json())
-      .then(data => {
-        for (const key of Object.keys(data).sort()) {
-          const li = document.createElement('li');
-          li.textContent = key;
-          li.addEventListener('click', () => {
-            input.value = key;
-            lookup(key);
-          });
-          list.appendChild(li);
-        }
-      });
-  </script>
-</body>
+      // Load acronym list and render clickable tags
+      fetch("/acronyms.json")
+        .then((r) => r.json())
+        .then((data) => {
+          for (const key of Object.keys(data).sort()) {
+            const li = document.createElement("li");
+            li.textContent = key;
+            li.addEventListener("click", () => {
+              input.value = key;
+              lookup(key);
+            });
+            list.appendChild(li);
+          }
+        });
+    </script>
+  </body>
 </html>

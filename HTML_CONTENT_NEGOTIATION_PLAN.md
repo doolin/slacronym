@@ -1,9 +1,11 @@
 # Plan: HTML Content Negotiation for Slacronym
 
 ## Goal
+
 Serve an interactive HTML page for browser requests while preserving JSON responses for Slack.
 
 ## What's Already Done
+
 - `public/index.html` has been created. It's a self-contained page with:
   - Dark theme, search input + submit button
   - Uses `fetch('/slacronym?term=...')` with `Accept: application/json` to look up acronyms
@@ -13,12 +15,15 @@ Serve an interactive HTML page for browser requests while preserving JSON respon
 ## Remaining Changes to `index.mjs`
 
 ### 1. Add HTML_PATH constant (line ~9)
+
 ```js
 const HTML_PATH = join(moduleDirname, "public", "index.html");
 ```
 
 ### 2. Add an `htmlPage` loader alongside `loadAcronyms()`
+
 Read and cache `public/index.html` at startup, similar to how acronyms are loaded:
+
 ```js
 function loadHtmlPage() {
   try {
@@ -32,7 +37,9 @@ const HTML_PAGE = loadHtmlPage();
 ```
 
 ### 3. Add helper to detect browser requests
+
 Check the `Accept` header — browsers send `text/html`, Slack never does:
+
 ```js
 function wantsHtml(event) {
   const accept = (event.headers?.accept || event.headers?.Accept || "").toLowerCase();
@@ -41,6 +48,7 @@ function wantsHtml(event) {
 ```
 
 ### 4. Add response helpers
+
 ```js
 function htmlResponse(body) {
   return {
@@ -60,7 +68,9 @@ function jsonFileResponse(content) {
 ```
 
 ### 5. Update `handler()` function
+
 At the top of the handler, before the existing logic:
+
 - If the path is `/acronyms.json`, serve the raw acronyms file (the HTML page fetches this for the tag list)
 - If `wantsHtml(event)` and the path is `/` or `/slacronym` and there's no `term`/`text` param, return the HTML page
 - Otherwise fall through to existing JSON/Slack logic
@@ -94,11 +104,13 @@ export function handler(event = {}) {
 ```
 
 ### 6. Update `SUPPORTED_PATHS` (optional)
+
 You could add `/acronyms.json` to it, or just handle it as a special case before the `isKnownPath` check (shown above).
 
 ## Testing
 
 ### Manual tests
+
 ```bash
 # Browser-like request — should return HTML
 curl -H "Accept: text/html" http://localhost:3000/
@@ -114,6 +126,7 @@ curl http://localhost:3000/acronyms.json
 ```
 
 ### Automated tests to add in `index.test.mjs`
+
 - GET `/` with `Accept: text/html` returns 200 with `content-type: text/html`
 - GET `/` without `Accept: text/html` returns JSON (existing behavior preserved)
 - GET `/acronyms.json` returns JSON with all acronym keys
@@ -121,5 +134,6 @@ curl http://localhost:3000/acronyms.json
 - GET `/slacronym?term=MAAG` with `Accept: text/html` still returns JSON (has a search term, so it's a lookup not a page serve)
 
 ## Deployment Notes
+
 - `public/index.html` needs to be included in `deploy.zip` — update `deploy.sh` if it currently only bundles `index.mjs`, `acronyms.json`, and `package.json`
 - No new dependencies required
