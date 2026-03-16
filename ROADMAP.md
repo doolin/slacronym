@@ -8,10 +8,10 @@
 ## Next application milestones
 
 1. Lock down Slack-formatted responses with request authentication from a Slack instance.
-2. Provide a server-side HTML render for requests not coming from Slack.
+2. ~~Provide a server-side HTML render for requests not coming from Slack.~~ Done.
 3. Replace the `"not found"` response with a random suggestion.
-4. Hook up CD.
-5. Add the git SHA of the deployed code to the page for runtime display.
+4. ~~Hook up CD.~~ Done.
+5. ~~Add the git SHA of the deployed code to the page for runtime display.~~ Done.
 6. General cleanup of the repository.
 7. Add CloudFront cache invalidation to deploy.sh.
 8. Configure CloudFront to forward the `Accept` header so Lambda can do content negotiation.

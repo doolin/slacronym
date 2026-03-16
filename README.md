@@ -2,7 +2,9 @@
 
 Slack-style acronym lookup service. Looks up military (Vietnam-era) acronyms and returns definitions in a format suitable for Slack slash commands or similar integrations.
 
-Runs as a **Lambda function** behind a **Function URL** (no API Gateway or CloudFront). Infrastructure is managed by Terraform; this repo holds the application code and deploys via `deploy.sh`.
+Also serves an interactive HTML page for browser requests via content negotiation.
+
+Runs as a **Lambda function** behind a **CloudFront distribution** with a **Function URL** origin. Infrastructure is managed by Terraform; this repo holds the application code. Pushes to `master` trigger automatic deployment via GitHub Actions.
 
 ## In operation
 
@@ -35,10 +37,12 @@ curl -X POST -d "text=MACV" "http://localhost:3000/slacronym"
 
 ## API
 
-- **Paths:** `/` and `/slacronym`
+- **Paths:** `/`, `/slacronym`, `/acronyms.json`
 - **Methods:** GET, POST
 - **Input:** `text` or `term` (query string for GET, or form/JSON body for POST)
-- **Response:** JSON with `response_type: "ephemeral"` and `text` (definition or message)
+- **Content negotiation:** Browser requests (`Accept: text/html`) with no search term get an interactive HTML page. All other requests get JSON.
+- **Response (JSON):** `{ response_type: "ephemeral", text: "..." }` (definition or message)
+- **`/acronyms.json`:** Returns the full acronym dictionary as JSON (used by the HTML frontend).
 
 Empty input returns a suggestion line; unknown acronyms return `Unknown acronym: <term>`.
 
@@ -52,7 +56,7 @@ yarn deploy
 ./deploy.sh
 ```
 
-Uses `AWS_PROFILE=terraformer` and `AWS_REGION=us-west-1` by default. The script packages only production artifacts: `index.mjs` (as `index.js`), `acronyms.json`, and `package.prod.json` (as `package.json`). **Development tooling is not deployed** — no devDependencies, no lint/format/audit scripts. Keep `package.prod.json` in sync with `package.json` for `name`/`version` if you change them. Runtime and handler are managed by Terraform.
+Uses `AWS_PROFILE=terraformer` and `AWS_REGION=us-west-1` by default (profile is skipped in CI). The script packages production artifacts: `index.mjs` (as `index.js`), `acronyms.json`, `package.prod.json` (as `package.json`), `public/index.html`, and a generated `version.json` containing the git SHA for runtime display. **Development tooling is not deployed.** Keep `package.prod.json` in sync with `package.json` for `name`/`version` if you change them. Runtime and handler are managed by Terraform.
 
 ## Scripts
 
@@ -73,7 +77,7 @@ Uses `AWS_PROFILE=terraformer` and `AWS_REGION=us-west-1` by default. The script
 
 ## CI/CD
 
-A **GitHub Actions** workflow (`.github/workflows/ci.yml`) runs on push and pull requests to `main`/`master`: install, test, lint, format check, and audit. No secrets required.
+A **GitHub Actions** workflow (`.github/workflows/ci.yml`) runs on push and pull requests to `main`/`master`: install, test, lint, format check, and audit. On pushes to `master`, a **deploy** job runs after checks pass — it authenticates via OIDC and deploys to Lambda automatically.
 
 **Compliance artifacts:** Each CI run produces uploadable artifacts (all include commit hash in a header):
 
