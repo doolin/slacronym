@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 const moduleFilename = fileURLToPath(import.meta.url);
 const moduleDirname = dirname(moduleFilename);
 const ACRONYMS_PATH = join(moduleDirname, "acronyms.json");
+const HTML_PATH = join(moduleDirname, "public", "index.html");
 
 function loadAcronyms() {
   try {
@@ -24,6 +25,17 @@ function loadAcronyms() {
 }
 
 const ACRONYMS = loadAcronyms();
+
+function loadHtmlPage() {
+  try {
+    return readFileSync(HTML_PATH, "utf8");
+  } catch (error) {
+    console.error("Failed to load index.html:", error);
+    return "<html><body>slacronym</body></html>";
+  }
+}
+
+const HTML_PAGE = loadHtmlPage();
 
 const SUPPORTED_PATHS = ["/", "/slacronym"];
 function buildSuggestionText() {
@@ -54,6 +66,27 @@ function slackEphemeral(text) {
       text,
     }),
   };
+}
+
+function htmlResponse(body) {
+  return {
+    statusCode: 200,
+    headers: { "content-type": "text/html; charset=utf-8" },
+    body,
+  };
+}
+
+function jsonResponse(content) {
+  return {
+    statusCode: 200,
+    headers: { "content-type": "application/json; charset=utf-8" },
+    body: content,
+  };
+}
+
+function wantsHtml(event) {
+  const accept = (event.headers?.accept || event.headers?.Accept || "").toLowerCase();
+  return accept.includes("text/html");
 }
 
 function notFound() {
@@ -160,12 +193,20 @@ export function handler(event = {}) {
   try {
     const path = extractPath(event);
 
+    if (path === "/acronyms.json") {
+      return jsonResponse(JSON.stringify(ACRONYMS));
+    }
+
     if (!isKnownPath(path)) {
       return notFound();
     }
 
     const rawText = extractTextFromEvent(event);
     const normalized = rawText.trim();
+
+    if (wantsHtml(event) && !normalized) {
+      return htmlResponse(HTML_PAGE);
+    }
 
     const found = lookupAcronym(normalized);
     if (found) return slackEphemeral(found);

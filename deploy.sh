@@ -26,6 +26,8 @@ trap "rm -rf $TEMP_DIR" EXIT
 cp index.mjs "$TEMP_DIR/index.js"
 cp acronyms.json "$TEMP_DIR/acronyms.json"
 cp package.prod.json "$TEMP_DIR/package.json"
+mkdir -p "$TEMP_DIR/public"
+cp public/index.html "$TEMP_DIR/public/index.html"
 
 # Create zip file
 ZIP_FILE="deploy.zip"

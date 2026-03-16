@@ -119,6 +119,46 @@ test("handler accepts root path", () => {
   assert.ok(data.text.includes("Landing Zone"));
 });
 
+test("GET / with Accept: text/html returns HTML page", () => {
+  const event = functionUrlEvent({ path: "/", headers: { accept: "text/html" } });
+  const res = handler(event);
+
+  assert.strictEqual(res.statusCode, 200);
+  assert.ok(res.headers["content-type"].includes("text/html"));
+  assert.ok(res.body.includes("Slacronym"));
+});
+
+test("GET /slacronym with Accept: text/html and no term returns HTML page", () => {
+  const event = functionUrlEvent({ path: "/slacronym", headers: { accept: "text/html" } });
+  const res = handler(event);
+
+  assert.strictEqual(res.statusCode, 200);
+  assert.ok(res.headers["content-type"].includes("text/html"));
+});
+
+test("GET /slacronym with Accept: text/html and a term returns JSON", () => {
+  const event = functionUrlEvent({
+    path: "/slacronym",
+    query: { term: "MAAG" },
+    headers: { accept: "text/html" },
+  });
+  const res = handler(event);
+
+  assert.strictEqual(res.statusCode, 200);
+  const data = JSON.parse(res.body);
+  assert.ok(data.text.includes("Military Assistance Advisory Group"));
+});
+
+test("GET /acronyms.json returns JSON with acronym keys", () => {
+  const event = functionUrlEvent({ path: "/acronyms.json" });
+  const res = handler(event);
+
+  assert.strictEqual(res.statusCode, 200);
+  assert.ok(res.headers["content-type"].includes("application/json"));
+  const data = JSON.parse(res.body);
+  assert.ok(data.MAAG);
+});
+
 test("handler normalizes acronym to uppercase", () => {
   const event = functionUrlEvent({ path: "/slacronym", query: { text: "maag" } });
   const res = handler(event);
