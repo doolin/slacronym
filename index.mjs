@@ -7,6 +7,7 @@ const moduleFilename = fileURLToPath(import.meta.url);
 const moduleDirname = dirname(moduleFilename);
 const ACRONYMS_PATH = join(moduleDirname, "acronyms.json");
 const HTML_PATH = join(moduleDirname, "public", "index.html");
+const VERSION_PATH = join(moduleDirname, "version.json");
 
 function loadAcronyms() {
   try {
@@ -26,9 +27,23 @@ function loadAcronyms() {
 
 const ACRONYMS = loadAcronyms();
 
+function loadBuildSha() {
+  try {
+    const raw = readFileSync(VERSION_PATH, "utf8");
+    return JSON.parse(raw).sha || "";
+  } catch {
+    return "";
+  }
+}
+
+const BUILD_SHA = loadBuildSha();
+
 function loadHtmlPage() {
   try {
-    return readFileSync(HTML_PATH, "utf8");
+    const raw = readFileSync(HTML_PATH, "utf8");
+    const shortSha = BUILD_SHA.slice(0, 7);
+    const display = shortSha ? shortSha : "dev";
+    return raw.replace("<!-- BUILD_SHA -->", display);
   } catch (error) {
     console.error("Failed to load index.html:", error);
     return "<html><body>slacronym</body></html>";

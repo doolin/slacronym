@@ -28,6 +28,7 @@ cp acronyms.json "$TEMP_DIR/acronyms.json"
 cp package.prod.json "$TEMP_DIR/package.json"
 mkdir -p "$TEMP_DIR/public"
 cp public/index.html "$TEMP_DIR/public/index.html"
+echo "{\"sha\":\"$(git rev-parse HEAD)\"}" > "$TEMP_DIR/version.json"
 
 # Create zip file
 ZIP_FILE="deploy.zip"

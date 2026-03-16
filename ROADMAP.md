@@ -13,3 +13,5 @@
 4. Hook up CD.
 5. Add the git SHA of the deployed code to the page for runtime display.
 6. General cleanup of the repository.
+7. Add CloudFront cache invalidation to deploy.sh.
+8. Configure CloudFront to forward the `Accept` header so Lambda can do content negotiation.
