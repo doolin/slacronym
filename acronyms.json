@@ -29,5 +29,15 @@
   "RTO": "RTO — Radio Telephone Operator (soldier handling communications).",
   "PBR": "PBR — Patrol Boat, River (U.S. Navy riverine patrol craft).",
   "VCI": "VCI — Viet Cong Infrastructure (covert communist political/support network).",
-  "DEROS": "DEROS — Date Eligible for Return from Overseas (scheduled rotation date for personnel)."
+  "DEROS": "DEROS — Date Eligible for Return from Overseas (scheduled rotation date for personnel).",
+  "MEDCAP": "MEDCAP — Medical Civic Action Program (military medical outreach to civilian populations).",
+  "COSVN": "COSVN — Central Office for South Vietnam (communist headquarters directing southern operations).",
+  "APC": "APC — Armored Personnel Carrier (tracked vehicle for troop transport).",
+  "CAP": "CAP — Combined Action Platoon (U.S. Marines and Vietnamese militia living in villages).",
+  "SEATO": "SEATO — Southeast Asia Treaty Organization (regional defense alliance).",
+  "VNAF": "VNAF — Vietnamese Air Force (South Vietnam's air force).",
+  "CCN": "CCN — Command and Control North (MACV-SOG forward element for operations into Laos and North Vietnam).",
+  "TAOR": "TAOR — Tactical Area of Responsibility (assigned operational zone for a military unit).",
+  "RPG": "RPG — Rocket-Propelled Grenade (shoulder-fired anti-armor weapon widely used by NVA/VC).",
+  "SITREP": "SITREP — Situation Report (periodic battlefield status update)."
 }
