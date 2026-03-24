@@ -287,5 +287,5 @@ function startLocalServer(port = 3000) {
    curl "http://localhost:3000/slacronym?text=MAAG"
 */
 if (import.meta.url === `file://${process.argv[1]}`) {
-  startLocalServer();
+  startLocalServer(Number(process.env.PORT) || 3000);
 }

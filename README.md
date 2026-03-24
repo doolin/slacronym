@@ -25,7 +25,11 @@ yarn install
 yarn dev
 ```
 
-Server listens on `http://localhost:3000`.
+Server listens on `http://localhost:3000`. If port 3000 is occupied, set `PORT`:
+
+```bash
+PORT=3001 yarn dev
+```
 
 **Examples:**
 
