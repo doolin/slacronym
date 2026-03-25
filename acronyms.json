@@ -39,5 +39,15 @@
   "CCN": "CCN — Command and Control North (MACV-SOG forward element for operations into Laos and North Vietnam).",
   "TAOR": "TAOR — Tactical Area of Responsibility (assigned operational zone for a military unit).",
   "RPG": "RPG — Rocket-Propelled Grenade (shoulder-fired anti-armor weapon widely used by NVA/VC).",
-  "SITREP": "SITREP — Situation Report (periodic battlefield status update)."
+  "SITREP": "SITREP — Situation Report (periodic battlefield status update).",
+  "MEDEVAC": "MEDEVAC — Medical Evacuation (helicopter transport of wounded personnel).",
+  "CINC": "CINC — Commander in Chief (top military commander of a unified command).",
+  "CINCPAC": "CINCPAC — Commander in Chief, Pacific (head of U.S. Pacific Command).",
+  "PSYOP": "PSYOP — Psychological Operations (propaganda and influence campaigns).",
+  "REMF": "REMF — Rear Echelon Mother F***** (slang for non-combat support personnel).",
+  "CIB": "CIB — Combat Infantryman Badge (award for infantry soldiers in combat).",
+  "DSHK": "DShK — Degtyaryov-Shpagin Krupnokaliberny (Soviet heavy machine gun used by NVA).",
+  "AO": "AO — Area of Operations (designated zone for military activity).",
+  "ANGLICO": "ANGLICO — Air and Naval Gunfire Liaison Company (unit coordinating fire support).",
+  "SERE": "SERE — Survival, Evasion, Resistance, and Escape (military training program)."
 }
