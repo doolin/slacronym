@@ -34,11 +34,11 @@ example-based tests miss.
 
 Formally specify the shapes that are currently enforced only by convention:
 
-| Artifact           | Schema constraint                                      |
-| ------------------ | ------------------------------------------------------ |
+| Artifact           | Schema constraint                                                          |
+| ------------------ | -------------------------------------------------------------------------- |
 | `acronyms.json`    | Object, all keys non-empty uppercase strings, all values non-empty strings |
-| JSON response body | `{ response_type: "ephemeral", text: string }`         |
-| `/acronyms.json`   | Same shape as `acronyms.json`                          |
+| JSON response body | `{ response_type: "ephemeral", text: string }`                             |
+| `/acronyms.json`   | Same shape as `acronyms.json`                                              |
 
 This can be done with `zod`, `ajv`, or plain assertions — no build step
 required. Validate `acronyms.json` at load time and response shape in
@@ -102,6 +102,7 @@ user input → extractTextFromEvent → .trim().toUpperCase() → ACRONYMS[key] 
 ```
 
 The flow is short and linear. Verify:
+
 - User input is never placed into response headers.
 - User input is always normalized before dictionary lookup.
 - The HTML page is static (loaded once at startup); user input does not
@@ -120,11 +121,11 @@ This prevents accidental introduction of runtime dependencies.
 
 ## Techniques that are overkill
 
-| Technique                | Why it doesn't fit                                      |
-| ------------------------ | ------------------------------------------------------- |
-| Model checking (TLA+)   | No concurrency, no distributed state                    |
-| Theorem proving (Coq)   | Logic is too simple to justify the overhead              |
-| Abstract interpretation  | TypeScript or zod gives 90% of the value                |
+| Technique               | Why it doesn't fit                          |
+| ----------------------- | ------------------------------------------- |
+| Model checking (TLA+)   | No concurrency, no distributed state        |
+| Theorem proving (Coq)   | Logic is too simple to justify the overhead |
+| Abstract interpretation | TypeScript or zod gives 90% of the value    |
 
 ## On porting to TypeScript
 
