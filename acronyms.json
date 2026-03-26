@@ -49,5 +49,15 @@
   "DSHK": "DShK — Degtyaryov-Shpagin Krupnokaliberny (Soviet heavy machine gun used by NVA).",
   "AO": "AO — Area of Operations (designated zone for military activity).",
   "ANGLICO": "ANGLICO — Air and Naval Gunfire Liaison Company (unit coordinating fire support).",
-  "SERE": "SERE — Survival, Evasion, Resistance, and Escape (military training program)."
+  "SERE": "SERE — Survival, Evasion, Resistance, and Escape (military training program).",
+  "DASC": "DASC — Direct Air Support Center (facility coordinating close air support missions).",
+  "JUSPAO": "JUSPAO — Joint United States Public Affairs Office (U.S. information and media relations in Saigon).",
+  "ICTZ": "ICTZ — I Corps Tactical Zone (northernmost military region of South Vietnam).",
+  "CHICOM": "CHICOM — Chinese Communist (designation for weapons and materiel supplied by China to NVA/VC).",
+  "WP": "WP — White Phosphorus (incendiary munition used for marking and screening).",
+  "NDP": "NDP — Night Defensive Position (temporary perimeter set up for overnight security).",
+  "CONEX": "CONEX — Container Express (standard military shipping container used for storage and fortification).",
+  "USARV": "USARV — United States Army, Vietnam (administrative command for U.S. Army forces in Vietnam).",
+  "SLAM": "SLAM — Search, Locate, Annihilate, and Monitor (aggressive patrol and interdiction tactic).",
+  "DIOCC": "DIOCC — District Intelligence and Operations Coordination Center (combined intelligence hub at district level)."
 }
