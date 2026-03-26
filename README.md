@@ -62,6 +62,8 @@ yarn deploy
 
 Uses `AWS_PROFILE=terraformer` and `AWS_REGION=us-west-1` by default (profile is skipped in CI). The script packages production artifacts: `index.mjs` (as `index.js`), `acronyms.json`, `package.prod.json` (as `package.json`), `public/index.html`, and a generated `version.json` containing the git SHA for runtime display. **Development tooling is not deployed.** Keep `package.prod.json` in sync with `package.json` for `name`/`version` if you change them. Runtime and handler are managed by Terraform.
 
+> **Note:** Pushes to `master` also trigger an automatic deploy via CI/CD (see below). Running `yarn deploy` locally right after pushing can cause a `ResourceConflictException` because Lambda only allows one update at a time. If this happens, wait a moment and retry.
+
 ## Scripts
 
 | Script              | Description                                                                  |
