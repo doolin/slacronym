@@ -59,5 +59,15 @@
   "CONEX": "CONEX — Container Express (standard military shipping container used for storage and fortification).",
   "USARV": "USARV — United States Army, Vietnam (administrative command for U.S. Army forces in Vietnam).",
   "SLAM": "SLAM — Search, Locate, Annihilate, and Monitor (aggressive patrol and interdiction tactic).",
-  "DIOCC": "DIOCC — District Intelligence and Operations Coordination Center (combined intelligence hub at district level)."
+  "DIOCC": "DIOCC — District Intelligence and Operations Coordination Center (combined intelligence hub at district level).",
+  "FAC": "FAC — Forward Air Controller (pilot or ground observer directing close air support strikes).",
+  "WIA": "WIA — Wounded in Action (military casualty classification for non-fatal injuries).",
+  "CAS": "CAS — Close Air Support (air strikes against targets near friendly ground forces).",
+  "MAF": "MAF — Marine Amphibious Force (major Marine Corps tactical formation in Vietnam).",
+  "MSR": "MSR — Main Supply Route (primary road or trail used for logistics and resupply).",
+  "PF": "PF — Popular Forces (South Vietnamese village-level militia).",
+  "RF": "RF — Regional Forces (South Vietnamese province-level territorial military units).",
+  "HES": "HES — Hamlet Evaluation System (U.S. reporting system measuring pacification progress in Vietnamese hamlets).",
+  "STABO": "STABO — Stabilized Tactical Airborne Body Operations (helicopter extraction harness for personnel recovery).",
+  "PACAF": "PACAF — Pacific Air Forces (U.S. Air Force major command responsible for air operations in the Pacific theater)."
 }
