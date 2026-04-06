@@ -199,6 +199,40 @@ change (S3 buckets, Lambda function_name), these will be destroyed and recreated
 12. **Delete old S3 buckets** once confirmed working
 13. **Update Claude Code memory paths**
 
+## 6. Alternative: Parallel Greenfield Deployment
+
+As an alternative to an in-place rename, you can stand up a completely new “vietnacronym” stack in parallel with the existing “slacronym” system, verify it end-to-end, then decommission the old stack. This approach avoids disruptive in-place renames and downtime.
+
+1. Terraform workspace/state isolation
+   - Create a separate workspace or backend for the new stack (e.g. `terraform workspace new vietnacronym`), keeping the old `slacronym` workspace untouched.
+
+2. Parameterize naming in code & CI
+   - Refactor application config, scripts (e.g. `deploy.sh`, Makefile), and Terraform variables to use a single `APP_NAME` (defaulting to `vietnacronym`) for function names, paths, and bucket names.
+   - This minimizes bulk find/replace and makes future renames or multi-tenant deployments easier.
+
+3. Provision new infrastructure
+   - Run `terraform init` / `terraform plan` / `terraform apply` in the new workspace to create the Vietnacronym S3 buckets, IAM roles, Lambda, API Gateway, CloudFront, etc.
+
+4. Data migration (optional)
+   - If you need existing artifacts, run `aws s3 sync s3://slacronym-artifacts s3://vietnacronym-artifacts` (and similarly for deployments) before or after provisioning.
+
+5. Deploy and test application
+   - Use your updated deploy script (pointing at `${APP_NAME}`) to publish the new Lambda.
+   - Smoke-test the new endpoint (`/vietnacronym` or your custom domain).
+
+6. Cut over traffic
+   - Switch DNS records or CloudFront origin from the Slacronym stack to the Vietnacronym stack (or update clients to the new path).
+
+7. Decommission old stack
+   - In the `slacronym` workspace, run `terraform destroy` to tear down legacy resources.
+   - Delete the old `slacronym-*` S3 buckets once you’ve confirmed no further data is needed.
+
+8. Legacy code cleanup
+   - After decommissioning, remove or rename any remaining legacy code (e.g. `modules/slacronym/`).
+
+9. Roll-back plan
+   - During cutover, you can instantly roll back by pointing DNS or your CDN origin back at the old Slacronym stack—no Terraform rollbacks required.
+
 **Why app code before Terraform**: If Terraform renames the Lambda first,
 the old `deploy.sh` (still referencing `slacronym`) will target a function
 that no longer exists. Updating app code first ensures the deploy script

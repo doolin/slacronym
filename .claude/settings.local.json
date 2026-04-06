@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -E \"\\\\.\\(json|yaml|yml|csv|txt\\)$\")",
+      "Bash(find /Users/daviddoolin/src/slacronym -type f -name \"*.json\" ! -path \"*/.yarn/*\" ! -path \"*/.git/*\" ! -path \"*/node_modules/*\" -exec wc -l {} +)",
+      "Bash(grep -r \"vietnam\\\\|acronym\" /Users/daviddoolin/src/slacronym --include=*.md --include=*.txt)"
+    ]
+  }
+}
