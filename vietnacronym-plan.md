@@ -12,38 +12,48 @@ infrastructure (Terraform), CI/CD, and git remotes.
 ## 1. Application Code (this repo)
 
 ### package.json / package.prod.json
+
 - Change `"name": "slacronym"` to `"name": "vietnacronym"` in both files
 
 ### index.mjs
+
 - Line 49: HTML fallback `"slacronym"` -> `"vietnacronym"`
 - Line 55: `SUPPORTED_PATHS` — change `"/slacronym"` to `"/vietnacronym"`
 - Line 281: console.log startup message
 - Line 287: curl example in comment
 
 ### index.test.mjs
+
 - Update any test strings/paths referencing `slacronym`
 
 ### public/index.html
+
 - Line 166: fetch URL `/slacronym?term=...` -> `/vietnacronym?term=...`
 
 ### deploy.sh
+
 - Line 6: `FUNCTION_NAME="slacronym"` -> `FUNCTION_NAME="vietnacronym"`
 - Line 53: curl example URL (path will change)
 
 ### check-lambda.sh
+
 - Line 5: default `LAMBDA_FUNCTION_NAME` from `slacronym` to `vietnacronym`
 
 ### debug-lambda.sh
+
 - Check and update any `slacronym` references
 
 ### Makefile
+
 - Line 1: target name `build-SlacronymFunction` -> `build-VietnacronymFunction`
 - Line 2: echo message
 
 ### scripts/attest.mjs
+
 - No code changes needed (uses env vars, not hardcoded name)
 
 ### README.md, AGENTS.md, FORMAL_TESTING.md, AWS_IAM_SETUP.md, HTML_CONTENT_NEGOTIATION_PLAN.md, ROADMAP.md
+
 - Find/replace `slacronym` -> `vietnacronym` in all documentation
 - Rename this plan file `vietnacronym-plan.md` accordingly if kept
 
@@ -66,30 +76,31 @@ destroyed, and recreated with the new name:
 
 All Terraform resource names change. Full list of resource renames:
 
-| Old resource name | New resource name |
-|---|---|
-| `aws_s3_bucket.slacronym_deployments` | `aws_s3_bucket.vietnacronym_deployments` |
-| `aws_s3_bucket_public_access_block.slacronym_deployments` | `aws_s3_bucket_public_access_block.vietnacronym_deployments` |
-| `aws_s3_bucket.slacronym_artifacts` | `aws_s3_bucket.vietnacronym_artifacts` |
-| `aws_s3_bucket_public_access_block.slacronym_artifacts` | `aws_s3_bucket_public_access_block.vietnacronym_artifacts` |
-| `aws_s3_bucket_versioning.slacronym_artifacts` | `aws_s3_bucket_versioning.vietnacronym_artifacts` |
+| Old resource name                                                        | New resource name                                                           |
+| ------------------------------------------------------------------------ | --------------------------------------------------------------------------- |
+| `aws_s3_bucket.slacronym_deployments`                                    | `aws_s3_bucket.vietnacronym_deployments`                                    |
+| `aws_s3_bucket_public_access_block.slacronym_deployments`                | `aws_s3_bucket_public_access_block.vietnacronym_deployments`                |
+| `aws_s3_bucket.slacronym_artifacts`                                      | `aws_s3_bucket.vietnacronym_artifacts`                                      |
+| `aws_s3_bucket_public_access_block.slacronym_artifacts`                  | `aws_s3_bucket_public_access_block.vietnacronym_artifacts`                  |
+| `aws_s3_bucket_versioning.slacronym_artifacts`                           | `aws_s3_bucket_versioning.vietnacronym_artifacts`                           |
 | `aws_s3_bucket_server_side_encryption_configuration.slacronym_artifacts` | `aws_s3_bucket_server_side_encryption_configuration.vietnacronym_artifacts` |
-| `aws_iam_user.slacronym` | `aws_iam_user.vietnacronym` |
-| `aws_iam_user_policy.slacronym_artifacts` | `aws_iam_user_policy.vietnacronym_artifacts` |
-| `aws_iam_role.slacronym_github_oidc` | `aws_iam_role.vietnacronym_github_oidc` |
-| `aws_iam_role_policy.slacronym_github_oidc_artifacts` | `aws_iam_role_policy.vietnacronym_github_oidc_artifacts` |
-| `aws_iam_role_policy.slacronym_github_oidc_lambda_deploy` | `aws_iam_role_policy.vietnacronym_github_oidc_lambda_deploy` |
-| `aws_iam_role.slacronym_gitlab_oidc` | `aws_iam_role.vietnacronym_gitlab_oidc` |
-| `aws_iam_role_policy.slacronym_gitlab_oidc_artifacts` | `aws_iam_role_policy.vietnacronym_gitlab_oidc_artifacts` |
-| `aws_s3_bucket_policy.slacronym_artifacts` | `aws_s3_bucket_policy.vietnacronym_artifacts` |
-| `data.archive_file.slacronym_placeholder` | `data.archive_file.vietnacronym_placeholder` |
-| `aws_s3_object.slacronym_placeholder` | `aws_s3_object.vietnacronym_placeholder` |
-| `aws_iam_role.slacronym_lambda_role` | `aws_iam_role.vietnacronym_lambda_role` |
-| `aws_iam_role_policy_attachment.slacronym_lambda_basic_execution` | `aws_iam_role_policy_attachment.vietnacronym_lambda_basic_execution` |
-| `aws_lambda_function.slacronym` | `aws_lambda_function.vietnacronym` |
-| `aws_lambda_function_url.slacronym` | `aws_lambda_function_url.vietnacronym` |
+| `aws_iam_user.slacronym`                                                 | `aws_iam_user.vietnacronym`                                                 |
+| `aws_iam_user_policy.slacronym_artifacts`                                | `aws_iam_user_policy.vietnacronym_artifacts`                                |
+| `aws_iam_role.slacronym_github_oidc`                                     | `aws_iam_role.vietnacronym_github_oidc`                                     |
+| `aws_iam_role_policy.slacronym_github_oidc_artifacts`                    | `aws_iam_role_policy.vietnacronym_github_oidc_artifacts`                    |
+| `aws_iam_role_policy.slacronym_github_oidc_lambda_deploy`                | `aws_iam_role_policy.vietnacronym_github_oidc_lambda_deploy`                |
+| `aws_iam_role.slacronym_gitlab_oidc`                                     | `aws_iam_role.vietnacronym_gitlab_oidc`                                     |
+| `aws_iam_role_policy.slacronym_gitlab_oidc_artifacts`                    | `aws_iam_role_policy.vietnacronym_gitlab_oidc_artifacts`                    |
+| `aws_s3_bucket_policy.slacronym_artifacts`                               | `aws_s3_bucket_policy.vietnacronym_artifacts`                               |
+| `data.archive_file.slacronym_placeholder`                                | `data.archive_file.vietnacronym_placeholder`                                |
+| `aws_s3_object.slacronym_placeholder`                                    | `aws_s3_object.vietnacronym_placeholder`                                    |
+| `aws_iam_role.slacronym_lambda_role`                                     | `aws_iam_role.vietnacronym_lambda_role`                                     |
+| `aws_iam_role_policy_attachment.slacronym_lambda_basic_execution`        | `aws_iam_role_policy_attachment.vietnacronym_lambda_basic_execution`        |
+| `aws_lambda_function.slacronym`                                          | `aws_lambda_function.vietnacronym`                                          |
+| `aws_lambda_function_url.slacronym`                                      | `aws_lambda_function_url.vietnacronym`                                      |
 
 AWS resource names (the `name` attribute passed to AWS) also change:
+
 - IAM user: `"slacronym"` -> `"vietnacronym"`
 - IAM roles: `"slacronym-github-oidc-role"`, `"slacronym-gitlab-oidc-role"`, `"slacronym-lambda-role"` -> `"vietnacronym-*"`
 - IAM policy names: `"slacronym-artifacts-write"`, `"slacronym-lambda-deploy"` -> `"vietnacronym-*"`
@@ -102,30 +113,33 @@ AWS resource names (the `name` attribute passed to AWS) also change:
 
 Resource renames:
 
-| Old | New |
-|---|---|
-| `aws_apigatewayv2_api.slacronym` | `aws_apigatewayv2_api.vietnacronym` |
-| `aws_apigatewayv2_integration.slacronym` | `aws_apigatewayv2_integration.vietnacronym` |
-| `aws_apigatewayv2_route.slacronym_default` | `aws_apigatewayv2_route.vietnacronym_default` |
-| `aws_apigatewayv2_stage.slacronym_default` | `aws_apigatewayv2_stage.vietnacronym_default` |
+| Old                                              | New                                                 |
+| ------------------------------------------------ | --------------------------------------------------- |
+| `aws_apigatewayv2_api.slacronym`                 | `aws_apigatewayv2_api.vietnacronym`                 |
+| `aws_apigatewayv2_integration.slacronym`         | `aws_apigatewayv2_integration.vietnacronym`         |
+| `aws_apigatewayv2_route.slacronym_default`       | `aws_apigatewayv2_route.vietnacronym_default`       |
+| `aws_apigatewayv2_stage.slacronym_default`       | `aws_apigatewayv2_stage.vietnacronym_default`       |
 | `aws_cloudwatch_log_group.slacronym_api_gateway` | `aws_cloudwatch_log_group.vietnacronym_api_gateway` |
-| `aws_lambda_permission.slacronym_api_gateway` | `aws_lambda_permission.vietnacronym_api_gateway` |
+| `aws_lambda_permission.slacronym_api_gateway`    | `aws_lambda_permission.vietnacronym_api_gateway`    |
 
 AWS-side names: API name `"slacronym-api"` -> `"vietnacronym-api"`, log group name `/aws/apigateway/slacronym`, tags, descriptions, statement IDs.
 
 Output in this file: `slacronym_api_gateway_url` -> `vietnacronym_api_gateway_url`
 
 ### variables.tf
+
 - `slacronym_lambda_s3_key` -> `vietnacronym_lambda_s3_key` (variable name, description, default path)
 - `slacronym_lambda_runtime` -> `vietnacronym_lambda_runtime`
 - `slacronym_lambda_handler` -> `vietnacronym_lambda_handler`
 
 ### outputs.tf
+
 - Rename all `slacronym_*` outputs to `vietnacronym_*`
 - Update descriptions and values to reference new resource names
 - `clubstraylight_slacronym_url` -> update path from `/slacronym` to `/vietnacronym`
 
 ### clubstraylight.tf
+
 - CloudFront origin: `origin_id = "Lambda-slacronym"` -> `"Lambda-vietnacronym"`
 - `domain_name` reference: `aws_lambda_function_url.slacronym` -> `aws_lambda_function_url.vietnacronym`
 - Cache behavior `path_pattern = "/slacronym*"` -> `"/vietnacronym*"`
@@ -133,6 +147,7 @@ Output in this file: `slacronym_api_gateway_url` -> `vietnacronym_api_gateway_ur
 - All `target_origin_id` references
 
 ### modules/slacronym/ -> modules/vietnacronym/ (rename directory)
+
 - Rename the module directory
 - Update main.tf, variables.tf, outputs.tf, README.md inside the module
 - Update any module source references in root terraform
@@ -140,6 +155,7 @@ Output in this file: `slacronym_api_gateway_url` -> `vietnacronym_api_gateway_ur
   consumed via a `module` block. Determine whether it is dead code before renaming.
 
 ### form-terra documentation
+
 - **README.md** (lines 194-302): extensive slacronym section covering artifacts, CI/CD identities, deployment, CloudFront routing
 - **BACKLOG.md** (lines 27, 174, 197): slacronym.tf references, file lists, Slack integration note
 - **bucket-audit.md** (lines 40-41, 51): bucket audit table entries for `slacronym-artifacts` and `slacronym-deployments`
@@ -151,6 +167,7 @@ doesn't change (IAM roles, policies, Lambda). For resources where the AWS name m
 change (S3 buckets, Lambda function_name), these will be destroyed and recreated.
 
 **Recommended approach**:
+
 1. `terraform plan` after all .tf changes to see what will be destroyed vs. modified
 2. Use `terraform state mv old_name new_name` for resources that only have a Terraform
    name change but no AWS-side name change
@@ -162,15 +179,18 @@ change (S3 buckets, Lambda function_name), these will be destroyed and recreated
 ## 3. Git Remotes and Repository Names
 
 ### GitHub
+
 - Rename repo `doolin/slacronym` -> `doolin/vietnacronym` via GitHub Settings
 - Update local remote: `git remote set-url origin git@github.com-doolin:doolin/vietnacronym.git`
 - GitHub will auto-redirect the old URL, but CI secrets/variables reference the repo name
 
 ### GitLab
+
 - Rename repo `doolin/slacronym` -> `doolin/vietnacronym` via GitLab Settings
 - Update local remote: `git remote set-url gitlab git@gitlab.com:doolin/vietnacronym.git`
 
 ### GitHub Actions Secrets/Variables
+
 - `AWS_ROLE_ARN` — will need updating if the OIDC role ARN changes
 - `S3_COMPLIANCE_BUCKET` — update if bucket name changes
 - No workflow file changes needed (ci.yml doesn't hardcode the name)
@@ -178,6 +198,7 @@ change (S3 buckets, Lambda function_name), these will be destroyed and recreated
 ---
 
 ## 4. Local filesystem
+
 - Rename directory `~/src/slacronym` -> `~/src/vietnacronym`
 - Update any Claude Code project memory paths (`.claude/projects/` key is path-based)
 
