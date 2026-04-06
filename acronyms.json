@@ -69,5 +69,15 @@
   "RF": "RF — Regional Forces (South Vietnamese province-level territorial military units).",
   "HES": "HES — Hamlet Evaluation System (U.S. reporting system measuring pacification progress in Vietnamese hamlets).",
   "STABO": "STABO — Stabilized Tactical Airborne Body Operations (helicopter extraction harness for personnel recovery).",
-  "PACAF": "PACAF — Pacific Air Forces (U.S. Air Force major command responsible for air operations in the Pacific theater)."
+  "PACAF": "PACAF — Pacific Air Forces (U.S. Air Force major command responsible for air operations in the Pacific theater).",
+  "MACVSOG": "MACV-SOG — Military Assistance Command, Vietnam – Studies and Observations Group (joint unconventional warfare task force).",
+  "BDA": "BDA — Bomb Damage Assessment (post-strike evaluation of target destruction).",
+  "DFC": "DFC — Distinguished Flying Cross (military decoration for heroism or achievement in aerial flight).",
+  "OPLAN": "OPLAN — Operations Plan (detailed military plan for conducting operations).",
+  "RSSZ": "RSSZ — Rung Sat Special Zone (VC-controlled mangrove swamp southeast of Saigon).",
+  "MRF": "MRF — Mobile Riverine Force (joint Army-Navy force operating in the Mekong Delta).",
+  "TACAN": "TACAN — Tactical Air Navigation (radio navigation system used by military aircraft).",
+  "RIF": "RIF — Reconnaissance in Force (offensive patrol to locate and engage the enemy).",
+  "IFFV": "IFFV — I Field Force, Vietnam (U.S. Army corps-level command for II Corps Tactical Zone).",
+  "TASS": "TASS — Tactical Air Support Squadron (Air Force unit providing close air support coordination)."
 }
