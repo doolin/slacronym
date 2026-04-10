@@ -79,5 +79,16 @@
   "TACAN": "TACAN — Tactical Air Navigation (radio navigation system used by military aircraft).",
   "RIF": "RIF — Reconnaissance in Force (offensive patrol to locate and engage the enemy).",
   "IFFV": "IFFV — I Field Force, Vietnam (U.S. Army corps-level command for II Corps Tactical Zone).",
-  "TASS": "TASS — Tactical Air Support Squadron (Air Force unit providing close air support coordination)."
+  "TASS": "TASS — Tactical Air Support Squadron (Air Force unit providing close air support coordination).",
+  "CTZ": "CTZ — Corps Tactical Zone (one of four military regions dividing South Vietnam).",
+  "DIA": "DIA — Defense Intelligence Agency (U.S. military intelligence organization involved in Vietnam War assessments).",
+  "EOD": "EOD — Explosive Ordnance Disposal (military unit specializing in disarming munitions and booby traps).",
+  "FDC": "FDC — Fire Direction Center (element computing firing data for artillery batteries).",
+  "GVN": "GVN — Government of Vietnam (South Vietnamese government, often used in official U.S. documents).",
+  "HUMINT": "HUMINT — Human Intelligence (intelligence gathered from human sources and agents).",
+  "JPRC": "JPRC — Joint Personnel Recovery Center (MACV element coordinating search and rescue for downed aircrews and POWs).",
+  "LAW": "LAW — Light Anti-tank Weapon (M72 disposable rocket launcher used by U.S. infantry).",
+  "NAVFORV": "NAVFORV — Naval Forces, Vietnam (U.S. Navy command overseeing naval operations in Vietnamese waters).",
+  "SAM": "SAM — Surface-to-Air Missile (anti-aircraft missile, notably the Soviet SA-2 used to defend North Vietnam).",
+  "TF": "TF — Task Force (temporary military grouping organized for a specific mission or operation)."
 }
