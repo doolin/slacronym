@@ -90,5 +90,15 @@
   "LAW": "LAW — Light Anti-tank Weapon (M72 disposable rocket launcher used by U.S. infantry).",
   "NAVFORV": "NAVFORV — Naval Forces, Vietnam (U.S. Navy command overseeing naval operations in Vietnamese waters).",
   "SAM": "SAM — Surface-to-Air Missile (anti-aircraft missile, notably the Soviet SA-2 used to defend North Vietnam).",
-  "TF": "TF — Task Force (temporary military grouping organized for a specific mission or operation)."
+  "TF": "TF — Task Force (temporary military grouping organized for a specific mission or operation).",
+  "AWOL": "AWOL — Absent Without Leave (military classification for unauthorized absence).",
+  "ROE": "ROE — Rules of Engagement (guidelines governing the use of force).",
+  "NCO": "NCO — Non-Commissioned Officer (military rank for enlisted leaders).",
+  "CO": "CO — Commanding Officer (officer in command of a military unit).",
+  "FUBAR": "FUBAR — Fouled Up Beyond All Recognition (slang for situation in disarray).",
+  "SNAFU": "SNAFU — Situation Normal: All Fouled Up (slang indicating typical chaos).",
+  "CSS": "CSS — Combat Service Support (logistical and administrative support activities).",
+  "ECM": "ECM — Electronic Countermeasure (methods to jam or deceive enemy electronic systems).",
+  "EW": "EW — Electronic Warfare (use of electromagnetic spectrum in combat operations).",
+  "JCS": "JCS — Joint Chiefs of Staff (group of senior military leaders advising U.S. government)."
 }
