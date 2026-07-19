@@ -46,3 +46,6 @@ attestation.pdf
 # Volta (managed globally; nothing project-local by default)
 # (kept for clarity; no patterns needed here currently)
 
+
+# Local Claude Code settings — per-machine, not shared.
+.claude/settings.local.json
