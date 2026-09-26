@@ -14,3 +14,7 @@ pnpm-lock.yaml
 deploy.zip
 
 # Config that is not source
+
+# Read-only mirror synced from clubstraylight; reformatting it here
+# would diverge from the master copy.
+COMMONS.md
