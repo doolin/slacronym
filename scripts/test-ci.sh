@@ -7,12 +7,13 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
+# Capture the exit code without letting `set -e` abort before the
+# artifacts are written; a failing run is the one most worth recording.
+EXIT=0
 node --test \
   --test-reporter=tap \
   --test-reporter-destination=test-results.tap \
-  index.test.mjs
-
-EXIT=$?
+  index.test.mjs || EXIT=$?
 
 # Commit hash: use GITHUB_SHA in CI, otherwise git rev-parse
 COMMIT_SHA="${GITHUB_SHA:-$(git rev-parse HEAD 2>/dev/null || echo "")}"

@@ -11,9 +11,10 @@ cd "$(dirname "$0")/.."
 COMMIT_SHA="${GITHUB_SHA:-$(git rev-parse HEAD 2>/dev/null || echo "")}"
 COMMIT_SHORT="${COMMIT_SHA:0:7}"
 
-# Run ESLint, capture output
-yarn lint 2>&1 | tee lint-results.raw.txt
-EXIT=${PIPESTATUS[0]}
+# Run ESLint, capture output. `|| EXIT=` keeps `set -e` from aborting
+# before the artifact is written when lint fails.
+EXIT=0
+yarn lint 2>&1 | tee lint-results.raw.txt || EXIT=${PIPESTATUS[0]}
 
 # Prepend commit header
 {

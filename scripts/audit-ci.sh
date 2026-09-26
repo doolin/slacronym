@@ -11,9 +11,10 @@ cd "$(dirname "$0")/.."
 COMMIT_SHA="${GITHUB_SHA:-$(git rev-parse HEAD 2>/dev/null || echo "")}"
 COMMIT_SHORT="${COMMIT_SHA:0:7}"
 
-# Run audit, capture output
-yarn audit 2>&1 | tee audit-results.raw.txt
-EXIT=${PIPESTATUS[0]}
+# Run audit, capture output. `|| EXIT=` keeps `set -e` from aborting
+# before the artifact is written when advisories are found.
+EXIT=0
+yarn audit 2>&1 | tee audit-results.raw.txt || EXIT=${PIPESTATUS[0]}
 
 # Prepend commit header
 {
