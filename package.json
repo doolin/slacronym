@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node index.mjs",
     "deploy": "./deploy.sh",
-    "test": "node --test index.test.mjs",
+    "test": "node --test index.test.mjs scripts/run-record.test.mjs",
     "test:ci": "./scripts/test-ci.sh",
     "lint": "eslint .",
     "lint:ci": "./scripts/lint-ci.sh",

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Run dependency audit and emit an artifact with commit hash for CI/CD compliance.
-# Produces: audit-results.txt (audit output with commit header).
+# Produces: audit-results.txt (audit output with commit header) and
+# audit-results.json (Yarn NDJSON advisories, counted by attest.mjs).
 # Exit code is the audit exit code (job fails when vulnerabilities are found).
 
 set -euo pipefail
@@ -15,6 +16,10 @@ COMMIT_SHORT="${COMMIT_SHA:0:7}"
 # before the artifact is written when advisories are found.
 EXIT=0
 yarn audit 2>&1 | tee audit-results.raw.txt || EXIT=${PIPESTATUS[0]}
+
+# Same audit as NDJSON (one advisory per line) for machine counting.
+# Its exit code duplicates the one above, so it is not recorded.
+yarn audit --json > audit-results.json || true
 
 # Prepend commit header
 {

@@ -105,15 +105,22 @@ In your GitHub repository:
 
 ### 5. Test
 
-Push a commit and check the Actions run. The "Upload CI artifacts to S3" step should succeed and upload files to:
+Push a commit and check the Actions run. The "Attest CI artifacts on Solana" step should succeed and upload files to:
 
 ```
-s3://your-compliance-bucket/slacronym/ci/<commit-sha>/
+s3://your-compliance-bucket/slacronym/ci/YYYY/MM/DD/HHMMSS-<sha7>/
   ├── test-results.tap
   ├── test-results.json
   ├── lint-results.txt
-  └── audit-results.txt
+  ├── audit-results.txt
+  ├── audit-results.json
+  ├── ci-artifacts.zip
+  ├── attestation.pdf
+  └── run-record.json
 ```
+
+Files whose check produced no output are absent; `run-record.json`
+is always present.
 
 ## Troubleshooting
 

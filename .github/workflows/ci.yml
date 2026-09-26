@@ -75,7 +75,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: audit-results
-          path: audit-results.txt
+          path: |
+            audit-results.txt
+            audit-results.json
           retention-days: 90
         # audit-results.txt includes commit hash in header
 
@@ -103,6 +105,12 @@ jobs:
         env:
           S3_BUCKET: ${{ vars.S3_COMPLIANCE_BUCKET }}
           SOLANA_NETWORK: devnet
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          CI_CHECK_OUTCOMES: >-
+            {"test":"${{ steps.test.outcome }}",
+            "lint":"${{ steps.lint.outcome }}",
+            "format":"${{ steps.format.outcome }}",
+            "audit":"${{ steps.audit.outcome }}"}
         run: yarn attest
 
       - name: Upload attestation artifacts
@@ -113,6 +121,7 @@ jobs:
           path: |
             ci-artifacts.zip
             attestation.pdf
+            run-record.json
           retention-days: 90
 
       - name: Cleanup keypair

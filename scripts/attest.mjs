@@ -5,7 +5,8 @@
  *
  * Zips CI artifacts, computes SHA-256, anchors the checksum on the Solana
  * blockchain via a memo transaction, generates a PDF attestation report,
- * and uploads everything to S3.
+ * writes a one-line run-record.json (see run-record.mjs), and uploads
+ * everything to S3.
  *
  * Environment variables:
  *   GITHUB_SHA            — commit hash (falls back to git rev-parse HEAD)
@@ -17,10 +18,13 @@
  *   GITHUB_REPOSITORY     — e.g. owner/repo (set by Actions)
  *   GITHUB_RUN_ID         — numeric run ID (set by Actions)
  *   GITHUB_REF_NAME       — branch name (set by Actions)
+ *   CI_CHECK_OUTCOMES     — JSON of workflow step outcomes, e.g.
+ *                           {"test":"success","lint":"failure"}
+ *   HEAD_SHA              — PR head commit (GITHUB_SHA is the merge commit)
  *   GITHUB_ACTIONS        — "true" in Actions; otherwise the run is "local"
  */
 
-import { readFileSync, createWriteStream, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, createWriteStream, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { execSync } from "node:child_process";
 import { resolve } from "node:path";
@@ -37,17 +41,22 @@ import {
 import archiver from "archiver";
 import PDFDocument from "pdfkit";
 
+import { RUN_RECORD_FILENAME, buildRunRecord, summarizeArtifacts } from "./run-record.mjs";
+
 // ---------------------------------------------------------------------------
 // Config
 // ---------------------------------------------------------------------------
 
 const MEMO_PROGRAM_ID = new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr");
 
+const REPO_NAME = "slacronym";
+
 const ARTIFACT_FILES = [
   "test-results.tap",
   "test-results.json",
   "lint-results.txt",
   "audit-results.txt",
+  "audit-results.json",
 ];
 
 const ZIP_FILENAME = "ci-artifacts.zip";
@@ -69,7 +78,7 @@ function buildS3Prefix(startTime, commitShort) {
   const hh = String(startTime.getUTCHours()).padStart(2, "0");
   const min = String(startTime.getUTCMinutes()).padStart(2, "0");
   const ss = String(startTime.getUTCSeconds()).padStart(2, "0");
-  return `slacronym/ci/${yyyy}/${mm}/${dd}/${hh}${min}${ss}-${commitShort}`;
+  return `${REPO_NAME}/ci/${yyyy}/${mm}/${dd}/${hh}${min}${ss}-${commitShort}`;
 }
 
 function getConfig() {
@@ -397,10 +406,27 @@ async function main() {
   await generatePdf(evidence, PDF_FILENAME);
   step("PDF generated", PDF_FILENAME);
 
-  // Step 5: S3 upload (individual artifacts + zip + PDF)
+  // Step 5: Run record — the queryable summary. It carries the zip's
+  // checksum, so it travels beside the zip rather than inside it.
+  const summary = summarizeArtifacts(
+    (name) => (existsSync(name) ? readFileSync(name, "utf8") : null),
+    process.env.CI_CHECK_OUTCOMES
+  );
+  const record = buildRunRecord({
+    repo: REPO_NAME,
+    env: process.env,
+    s3Prefix,
+    attestedAt: new Date().toISOString(),
+    summary,
+    evidence,
+  });
+  writeFileSync(RUN_RECORD_FILENAME, `${JSON.stringify(record)}\n`);
+  step("Run record written", `${RUN_RECORD_FILENAME} (result: ${record.result})`);
+
+  // Step 6: S3 upload (individual artifacts + zip + PDF + run record)
   if (config.bucket) {
     console.log("☁️  Uploading to S3...");
-    const uploadFiles = [...includedFiles, ZIP_FILENAME, PDF_FILENAME];
+    const uploadFiles = [...includedFiles, ZIP_FILENAME, PDF_FILENAME, RUN_RECORD_FILENAME];
     uploadToS3(config.bucket, s3Prefix, uploadFiles, config.region);
     step("Uploaded to S3", `s3://${config.bucket}/${s3Prefix}/`);
   } else {

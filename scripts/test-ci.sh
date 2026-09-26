@@ -13,7 +13,7 @@ EXIT=0
 node --test \
   --test-reporter=tap \
   --test-reporter-destination=test-results.tap \
-  index.test.mjs || EXIT=$?
+  index.test.mjs scripts/run-record.test.mjs || EXIT=$?
 
 # Commit hash: use GITHUB_SHA in CI, otherwise git rev-parse
 COMMIT_SHA="${GITHUB_SHA:-$(git rev-parse HEAD 2>/dev/null || echo "")}"

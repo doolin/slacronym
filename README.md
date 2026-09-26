@@ -87,13 +87,16 @@ A **GitHub Actions** workflow (`.github/workflows/ci.yml`) runs on push and pull
 
 **Compliance artifacts:** Each CI run produces uploadable artifacts (all include commit hash in a header):
 
-| Artifact          | Contents                                      | Script          |
-| ----------------- | --------------------------------------------- | --------------- |
-| **test-results**  | `test-results.tap` (TAP), `test-results.json` | `yarn test:ci`  |
-| **lint-results**  | `lint-results.txt` (ESLint output)            | `yarn lint:ci`  |
-| **audit-results** | `audit-results.txt` (dependency audit)        | `yarn audit:ci` |
+| Artifact          | Contents                                                 | Script          |
+| ----------------- | -------------------------------------------------------- | --------------- |
+| **test-results**  | `test-results.tap` (TAP), `test-results.json`            | `yarn test:ci`  |
+| **lint-results**  | `lint-results.txt` (ESLint output)                       | `yarn lint:ci`  |
+| **audit-results** | `audit-results.txt`, `audit-results.json` (NDJSON)       | `yarn audit:ci` |
+| **attestation**   | `ci-artifacts.zip`, `attestation.pdf`, `run-record.json` | `yarn attest`   |
 
-Each artifact file is prefixed with `# commit:`, `# commitShort:`, and (where applicable) `# exitCode:` so you can tie results to a commit. The workflow uploads artifacts even when the step fails (`if: always()`). Download from Actions → run → Summary → Artifacts. Retention: 90 days.
+Each text artifact is prefixed with `# commit:`, `# commitShort:`, and (where applicable) `# exitCode:` so you can tie results to a commit. Every check runs even when an earlier one fails, and each script writes its artifact on failure too, so a failing run leaves complete evidence. Download from Actions → run → Summary → Artifacts. Retention: 90 days.
+
+`run-record.json` is a one-line JSON summary of the run for Athena: commit, event, branch, run URL, each check's outcome, test/lint/advisory counts, and the archive checksum and Solana transaction. Its schema (v1) is shared across repos and defined in form-terra at `.development/plans/ci-audit-analytics.md`; the code is `scripts/run-record.mjs`.
 
 **S3 upload (optional):** The workflow can also upload artifacts to S3 for long-term compliance storage. Configure:
 
@@ -109,7 +112,7 @@ Each artifact file is prefixed with `# commit:`, `# commitShort:`, and (where ap
    - Create an IAM role with trust policy allowing `repo:OWNER/REPO` to assume it
    - Attach policy allowing `s3:PutObject` on your compliance bucket (e.g. `s3://bucket/slacronym/ci/*`)
 
-Artifacts upload to `s3://BUCKET/slacronym/ci/<commit-sha>/` (e.g. `s3://bucket/slacronym/ci/abc123/test-results.tap`). If OIDC isn’t configured, the S3 upload step is skipped (workflow still succeeds).
+Artifacts upload to `s3://BUCKET/slacronym/ci/YYYY/MM/DD/HHMMSS-<sha7>/` (UTC time the attest step started; e.g. `s3://inventium-artifacts/slacronym/ci/2026/09/12/151239-23f084e/run-record.json`). If `S3_COMPLIANCE_BUCKET` isn’t set, the attest and upload steps are skipped.
 
 **Out-of-band:** If your compliance process requires **JUnit XML** for tests instead of TAP, add a devDependency (e.g. `node-test-junit-reporter` or `tap-junit`) and a step that produces/upload JUnit; the current setup needs no extra dependencies.
 
