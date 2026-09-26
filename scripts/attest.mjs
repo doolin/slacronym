@@ -17,6 +17,7 @@
  *   GITHUB_REPOSITORY     — e.g. owner/repo (set by Actions)
  *   GITHUB_RUN_ID         — numeric run ID (set by Actions)
  *   GITHUB_REF_NAME       — branch name (set by Actions)
+ *   GITHUB_ACTIONS        — "true" in Actions; otherwise the run is "local"
  */
 
 import { readFileSync, createWriteStream, existsSync } from "node:fs";
@@ -88,6 +89,9 @@ function getConfig() {
     repository: process.env.GITHUB_REPOSITORY || "",
     runId: process.env.GITHUB_RUN_ID || "",
     branch: process.env.GITHUB_REF_NAME || "",
+    // Local runs may post to devnet; the memo says so, so a test post
+    // can never be mistaken for CI evidence.
+    origin: process.env.GITHUB_ACTIONS === "true" ? "ci" : "local",
   };
 }
 
@@ -214,6 +218,7 @@ function renderSummary(doc, evidence) {
   doc.fontSize(10).font("Helvetica");
   doc.text(`Repository: ${evidence.repository || "slacronym"}`);
   doc.text(`Commit: ${evidence.commitSha}`);
+  doc.text(`Origin: ${evidence.origin === "ci" ? "CI run" : "local run (not CI evidence)"}`);
   if (evidence.branch) doc.text(`Branch: ${evidence.branch}`);
   if (evidence.ciRunUrl) doc.text(`CI Run: ${evidence.ciRunUrl}`);
   doc.moveDown(0.7);
@@ -354,6 +359,7 @@ async function main() {
     s3Key,
     artifactChecksum: checksum,
     includedFiles,
+    origin: config.origin,
     solanaNetwork: config.network,
     solanaTxSignature: null,
     solanaError: null,
@@ -370,6 +376,8 @@ async function main() {
         artifact_checksum: `sha256:${checksum}`,
         commit: config.commitSha,
         timestamp: evidence.completedAt,
+        network: config.network,
+        origin: config.origin,
       };
       const sig = await submitSolanaMemo(memoPayload, config.keypairPath, config.network);
       evidence.solanaTxSignature = sig;
