@@ -29,7 +29,10 @@ jobs:
       - name: Install dependencies
         run: yarn install --immutable
 
+      # Every check runs even after an earlier one fails (!cancelled()),
+      # so each run's evidence covers all checks. The job still fails.
       - name: Run tests
+        id: test
         run: yarn test:ci
 
       - name: Upload test artifacts
@@ -44,6 +47,8 @@ jobs:
         # Artifacts include commit hash (GITHUB_SHA) in file headers for compliance
 
       - name: Lint
+        id: lint
+        if: ${{ !cancelled() }}
         run: yarn lint:ci
 
       - name: Upload lint artifact
@@ -56,9 +61,13 @@ jobs:
         # lint-results.txt includes commit hash in header
 
       - name: Check formatting
+        id: format
+        if: ${{ !cancelled() }}
         run: yarn format:check
 
       - name: Audit dependencies
+        id: audit
+        if: ${{ !cancelled() }}
         run: yarn audit:ci
 
       - name: Upload audit artifact
