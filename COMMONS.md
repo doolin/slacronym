@@ -6,10 +6,11 @@
 
 ## Conventions
 
-- **Commit attribution** — end commits with a co-author line naming the
-  contributing identity. Repositories may add local detail such as the
-  harness, client, model, or provider, but the commons do not require
-  any particular vendor, product, or runtime.
+- **Commit attribution** — the operator is the author of every commit,
+  the ones a tool makes included; an agent is never an author, only a
+  co-author, named in a trailer. Repositories may add local detail such
+  as the harness, client, model, or provider, but the commons do not
+  require any particular vendor, product, or runtime.
 - **Memory protocol** — identity lives in the files, not the session;
   continuity is written, not remembered.
 
@@ -44,12 +45,15 @@ Continuity is a discipline of the files, not a property of the session.
 
 ### Commit attribution
 
-Contributions from a non-human collaborator are credited by commit
-attribution. The local repository may define the exact trailer format.
-At minimum, the line names the contributing identity; when useful, it
-may also name the harness, client, model family, provider, or version.
-The commons intentionally stay neutral about those implementation
-details.
+The author of a commit is the operator: git's configured user, who is
+responsible for the change. This holds for a commit an agent makes at
+the keyboard and for one a tool makes across many repositories. An
+agent is never the author, and no tool sets `--author` to an agent's
+name. The agent's contribution is credited by a co-author trailer. The
+local repository may define the exact trailer format. At minimum, the
+line names the contributing identity; when useful, it may also name
+the harness, client, model family, provider, or version. The commons
+intentionally stay neutral about those implementation details.
 
 Examples:
 
