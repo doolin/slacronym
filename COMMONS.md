@@ -92,3 +92,18 @@ Keep shell invocations simple enough to inspect. Avoid long `&&`
 chains that mix setup, mutation, verification, and reporting in one
 line; split the work into named scripts, make targets, or separate
 commands so failures have a clear boundary.
+
+### Scratch and temporary files
+
+Use `/tmp/<project-name>/` for scratch work and temporary files,
+where `<project-name>` is the repository's directory name. Keep
+each task's files in a uniquely named subdirectory to avoid
+collisions with concurrent work.
+
+This predictable location lets the operator pre-approve access
+and makes temporary work easy to identify and clean up.
+
+When finished, remove the temporary files and task subdirectory
+you created. Save any results needed for review or future work
+in their appropriate permanent location before cleanup. Leave
+other tasks' and agents' files alone.
